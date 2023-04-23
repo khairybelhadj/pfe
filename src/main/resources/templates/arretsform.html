@@ -3,37 +3,38 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width = device-width, initial-scale = 1, shrink-to-fit = no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-    <title>Watchlist App</title>
+    <title>Asteel Flash Tunisie</title>
 </head>
 <body>
 <div class="container">
-    <nav class="navbar navbar-expand-sm navbar-dark bg-secondary">
-        <a class="navbar-brand" href="homepage-static.html">Watchlist App</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse"
-                data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-
-            <span class="navbar-toggler-icon"></span>
+    <nav class = "navbar navbar-expand-sm navbar-dark bg-secondary">
+        <a class = "navbar-brand" href = "homepage-static.html">Asteel Flash</a>
+        <button class = "navbar-toggler" type = "button" data-toggle = "collapse"
+                data-target = "#navbarSupportedContent"
+                aria-controls = "navbarSupportedContent" aria-expanded = "false"
+                aria-label = "Toggle navigation">
+            <span class = "navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="homepage-static.html">Home</a>
+        <div class = "collapse navbar-collapse" id = "navbarSupportedContent">
+            <ul class = "navbar-nav mr-auto">
+                <li class = "nav-item">
+                    <a class = "nav-link" href = "/Gestion_quatités">Gestion quatités</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="watchlist-static.html">Watchlist</a>
+                <li class = "nav-item active">
+                    <a class = "nav-link" href = "/Gestion_d_arrés">Gestion d'arrés</a>
                 </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="watchlistItemForm-static.html">Submit an item</a>
+                <li class = "nav-item ">
+                    <a class = "nav-link" href = "/Gestion_produits">Gestion produits</a>
+                </li>
+                <li class = "nav-item ">
+                    <a class = "nav-link" href = "Afficher">Afficher</a>
                 </li>
             </ul>
-
         </div>
     </nav>
     <form action="#" method="post">
-        <h2 class="mt-4">Submit an item</h2>
+        <h2 class="mt-4">Submit an $top</h2>
         <hr/>
         <!-- Form levels error messages here -->
         <div class="form-group row ">
@@ -78,26 +79,66 @@
             </div>
         </div>
 
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-6">
 
-        <div class="form-group row ">
-            <label for="" class="col-sm-2 col-form-label mr-0">Heure Dedut</label>
-            <div class="col-sm-4">
-                <input type="time" class="form-control" placeholder="00:00">
-            </div>
-            <div class="col-sm-4">
-                <span class="text-danger"> </span>
+                    <div class="form-group row ">
+                        <label for="" class="col-sm-2 col-form-label mr-0">Heure Dedut</label>
+                        <div class="col-sm-4">
+                            <input type="time" class="form-control" placeholder="00:00">
+                        </div>
+                        <div class="col-sm-4">
+                            <span class="text-danger"> </span>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <span class="text-danger"> </span>
+                    </div>
+                </div>
+                <div calss="col-6 ">
+                    <div class="form-group row">
+                        <label for="" class="col-6 col-form-label mr-0">Heure de fin</label>
+                        <input type="time" class="form-control col-6" placeholder="00:00">
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="form-group row">
-            <label for="comments" class="col-sm-2 col-form-label">Comments</label>
-            <div class="col-sm-4">
-                <textarea class="form-control" rows="3" placeholder="Max. 50 chars"></textarea>
-            </div>
-            <div class="col-sm-4">
-                <span class="text-danger"> </span>
+
+        <!-- ######################### Third line ################################ !-->
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label for="" class="row">Description</label>
+                        <div class="row">
+                        <textarea class="form-control col-10"  rows="2" placeholder="Description"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div calss="col-6 ">
+                    <div class="form-group row">
+                        <label for=""  class="raw">Cause d'arréts</label>
+                            <textarea class="form-control raw" rows="2"  placeholder="Max. 50 chars"></textarea>
+                    </div>
+                </div>
             </div>
         </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         <div class="form-group row">
             <div class="col-sm-10">
