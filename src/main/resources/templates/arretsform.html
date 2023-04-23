@@ -49,10 +49,11 @@
                     <div class="form-group row ">
                         <label for="" class="col-sm-2 col-form-label">Categorie d'arrets</label>
                         <div class="col-sm-4">
-                            <select class="form-control" placeholder="Mandatory">
-                                <option>Large select</option>
-                                <option>Large select2</option>
-                                <option>Large select1</option>
+                            <select class="form-control" placeholder="Mandatory" id="list1">
+                                <option value="">Select an option</option>
+                                <option value="1">Option 1</option>
+                                <option value="2">Option 2</option>
+                                <option value="3">Option 3</option>
                             </select>
 
                         </div>
@@ -65,10 +66,8 @@
                     <div class="form-group row ">
                         <label for="" class="col-sm-2 col-form-label mr-0">types d'arrets</label>
                         <div class="col-sm-4">
-                            <select class="form-control" placeholder="Mandatory">
-                                <option>Large select</option>
-                                <option>Large select2</option>
-                                <option>Large select1</option>
+                            <select class="form-control" placeholder="Mandatory" id="list2">
+                                <option value="">Select an option</option>
                             </select>
                         </div>
                         <div class="col-sm-4">
@@ -152,5 +151,44 @@
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+<script >
+
+    // Define the options for the second list
+const list2Options = {
+  "1": ["Pause", "Réunion", "Formation", "Maintenance préventive niveaux 1", "Validation EI", "Modification de la ligne", "Arrêt planifié par la production"],
+
+  "2": ["Démarrage/Arrêt de la ligne", "changement de la série", "stabilisation de ma four"],
+  "3": ["Arrêt dû à un manque de kit/outillage"," absence de personnel"," instructions de travail manquantes, problèmes avec l'outillage", "coupure de courant/réseau"," changement de planning de dernière minute", "rupture de composants"],
+  "3": ["Option 3-1", "Option 3-2", "Option 3-3", "Option 3-4"]
+};
+
+// Get references to the select elements
+const list1 = document.getElementById("list1");
+const list2 = document.getElementById("list2");
+
+// When an option is selected in the first list
+list1.addEventListener("change", function() {
+  // Clear the options from the second list
+  list2.innerHTML = "<option value=''>Select an option</option>";
+
+  // Get the selected value from the first list
+  const selectedValue = list1.value;
+
+  // If a value is selected
+  if (selectedValue) {
+    // Loop through the options for the second list
+    for (let i = 0; i < list2Options[selectedValue].length; i++) {
+      // Create a new option element
+      const option = document.createElement("option");
+      option.text = list2Options[selectedValue][i];
+      option.value = list2Options[selectedValue][i];
+
+      // Add the new option to the second list
+      list2.add(option);
+    }
+  }
+});
+
+</script>
 </body>
 </html>
