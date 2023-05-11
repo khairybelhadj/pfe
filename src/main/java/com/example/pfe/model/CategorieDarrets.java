@@ -2,12 +2,12 @@ package com.example.pfe.model;
 
 public enum CategorieDarrets {
     ARRETPROGRAMMES,
-     ArretsProgrammes,
-     ChangementDeSerie,
-     DisfonctionementOrganisationnel,
-     pannes,
+    ArretsProgrammes,
+    ChangementDeSerie,
+    DisfonctionementOrganisationnel,
+    pannes,
     NonQualite,
-     SousCharge;
+    SousCharge;
 
 
     private static final CategorieDarrets[] ENUMS = CategorieDarrets.values();

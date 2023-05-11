@@ -13,7 +13,7 @@ import java.util.Map;
 
 
 @RestController
-public class pfdController {
+public class StopController {
 
     static List<Stop> stops;
 
@@ -41,7 +41,7 @@ public class pfdController {
         stops.add(stop2);
     }
 
-    @GetMapping("stop")
+    @GetMapping("top/get")
     public List<Stop> getStop() {
         return stops;
     }
@@ -63,7 +63,7 @@ public class pfdController {
         return stops;
     }
 
-    @GetMapping("salah")
+        @GetMapping("salah")
     public ModelAndView raja3Salh() {
         Map model=new HashMap<>();
         model.put("name","salah");
@@ -107,4 +107,5 @@ public class pfdController {
     }
 
 
-}
+        }
+
