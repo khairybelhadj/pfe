@@ -1,4 +1,4 @@
-package com.example.pfe.model;
+package com.example.pfe.model.enumuration;
 
 public enum Jour {
     LUNDI,

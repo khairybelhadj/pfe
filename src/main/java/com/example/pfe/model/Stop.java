@@ -1,6 +1,7 @@
 package com.example.pfe.model;
 
 
+import com.example.pfe.model.enumuration.TypesDarrets;
 import lombok.*;
 
 import java.time.LocalTime;

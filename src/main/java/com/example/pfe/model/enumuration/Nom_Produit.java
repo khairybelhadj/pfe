@@ -1,4 +1,4 @@
-package com.example.pfe.model;
+package com.example.pfe.model.enumuration;
 
 public enum Nom_Produit {
     ARV1003456AC0203S,
