@@ -1,5 +1,6 @@
-package com.example.pfe.entiy;
+package com.example.pfe.persistence.entiy;
 
+import com.example.pfe.controller.dto.StopDto;
 import com.example.pfe.model.enumuration.TypesDarrets;
 
 import lombok.Data;
@@ -21,9 +22,20 @@ public class StopEntity {
     private Integer id;
     @Column(name = "types_arrets")
     private TypesDarrets typesDarrets;
-    private LocalTime start_time;
+    private LocalTime starttime;
     private LocalTime end_time;
     private String cause_stop;
     private String description;
 
+    @ManyToOne
+    @JoinColumn(name = "work_period_entity_id")
+    private WorkPeriodEntity workPeriodEntity;
+
+    public StopEntity(StopDto stopDto){
+        this.typesDarrets=stopDto.getTypesDarrets();
+        this.cause_stop=stopDto.getCause_stop();
+        this.description=stopDto.getDescription();
+        this.starttime=stopDto.getStarttime();
+        this.end_time=stopDto.getEnd_time();
+    }
 }

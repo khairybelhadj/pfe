@@ -1,12 +1,10 @@
-package com.example.pfe.entiy;
+package com.example.pfe.persistence.entiy;
 
 
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Data
@@ -16,4 +14,9 @@ public class ProductEntity {
     private Integer id;
     @Column(name = "nom_produit")
     private String nomProduit;
+
+    @OneToMany
+    private List<WorkPeriodEntity> workPeriodEntities;
+
+
 }

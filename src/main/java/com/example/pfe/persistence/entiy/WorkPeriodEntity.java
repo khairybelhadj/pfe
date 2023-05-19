@@ -1,13 +1,12 @@
-package com.example.pfe.entiy;
+package com.example.pfe.persistence.entiy;
 
 import com.example.pfe.model.enumuration.Jour;
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.time.Duration;
 import java.time.Period;
+import java.util.List;
 
 @Entity
 @Data
@@ -15,12 +14,13 @@ import java.time.Period;
 public class WorkPeriodEntity {
     @Id
     private Integer id;
+
     @Column(name = "nombres_cartes")
     private Integer nombresCartes;
     @Column(name = "cycle_temps_theorique")
-    private Period cycleTempsTheorique;
+    private Duration cycleTempsTheorique;
     @Column(name = "temps_theorique_realisation")
-    private Period tempsTheoriqueRealisation;
+    private Duration tempsTheoriqueRealisation;
     private boolean face;
     private String shift;
     private Jour jour;
@@ -28,9 +28,14 @@ public class WorkPeriodEntity {
     private Integer nombreCarteBonne;
     @Column(name = "nombre_carte_mauvaie")
     private Integer nombreCarteMauvaie;
-//    List<StopEntity> stopEntities;
 
+    @ManyToOne
+    private ProductEntity productEntity;
 
-//    ProductEntity productEntity;
+    @ManyToOne
+    private WorkerEntity workerEntity;
+    @OneToMany(cascade = CascadeType.ALL)
+    List<StopEntity> stopEntities;
+
 
 }
