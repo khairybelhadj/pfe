@@ -2,20 +2,24 @@ package com.example.pfe.controller;
 
 import com.example.pfe.application.DataBaseConfigService;
 import com.example.pfe.controller.dto.StopDto;
+import com.example.pfe.controller.dto.WorkPeriodDto;
 import com.example.pfe.persistence.entiy.ProductEntity;
 import com.example.pfe.persistence.entiy.StopEntity;
 import com.example.pfe.model.Stop;
 import com.example.pfe.persistence.repo.ProductRepo;
 import com.example.pfe.persistence.repo.StopRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 
-@RestController
+@Controller
 public class StopController {
 
     @Autowired
@@ -26,13 +30,41 @@ public class StopController {
      * @param workPeriodId
      * @return
      */
+
+
     @GetMapping("getStopsByWorkPeriodId")
-    public List<StopEntity> getStopsByWorkPeriodId(@RequestParam  Integer workPeriodId){
+    public List<StopEntity> getStopsByWorkPeriodId(@RequestParam Integer workPeriodId) {
         return dataBaseConfigService.getStopsByWorkPeriodId(workPeriodId);
     }
 
+    @GetMapping()
+    public ModelAndView getIndex() {
+        Map<String, Object> model = new HashMap<>();
+        List<String> list1 = new ArrayList<>();
+        model.put("date", LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/YYYY")));
+        model.put("key1",list1);
+        ModelAndView modelAndView = new ModelAndView("index", model);
+        return modelAndView;
+    }
+    @GetMapping("/add/workPeriod")
+    public ModelAndView addWorkPeriodGet(){
+        Map<String, Object> model = new HashMap<>();
+        WorkPeriodDto workPeriodDto=new WorkPeriodDto();
+        workPeriodDto.setBottom(false);
+        workPeriodDto.setTop(true);
+        model.put("workperiod",workPeriodDto);
+        ModelAndView modelAndView = new ModelAndView("quantform", model);
+        return modelAndView;
+    }
+    @PostMapping("postWorkPeiod")
+    public ModelAndView postWorkPeiod(WorkPeriodDto workPeriodDto){
+        System.out.println(workPeriodDto);
+        return new ModelAndView();
+    }
+
+
     @PostMapping("add")
-    public  List<StopEntity> get(@RequestBody StopDto stopDto){
+    public List<StopEntity> get(@RequestBody StopDto stopDto) {
         return dataBaseConfigService.saveStop(stopDto);
     }
 

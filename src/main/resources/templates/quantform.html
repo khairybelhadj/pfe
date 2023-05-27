@@ -1,4 +1,4 @@
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width = device-width, initial-scale = 1, shrink-to-fit = no">
@@ -7,33 +7,33 @@
 </head>
 <body>
 <div class="container">
-    <nav class = "navbar navbar-expand-sm navbar-dark bg-secondary">
-        <a class = "navbar-brand" href = "homepage-static.html">Asteel Flash</a>
-        <button class = "navbar-toggler" type = "button" data-toggle = "collapse"
-                data-target = "#navbarSupportedContent"
-                aria-controls = "navbarSupportedContent" aria-expanded = "false"
-                aria-label = "Toggle navigation">
-            <span class = "navbar-toggler-icon"></span>
+    <nav class="navbar navbar-expand-sm navbar-dark bg-secondary">
+        <a class="navbar-brand" href="homepage-static.html">Asteel Flash</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class = "collapse navbar-collapse" id = "navbarSupportedContent">
-            <ul class = "navbar-nav mr-auto">
-                <li class = "nav-item">
-                    <a class = "nav-link active" href = "/Gestion_Quatités">Gestion quatités</a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="/Gestion_Quatités">Gestion quatités</a>
                 </li>
-                <li class = "nav-item ">
-                    <a class = "nav-link" href = "/Gestion_d_Arréts">Gestion d'arréts</a>
+                <li class="nav-item ">
+                    <a class="nav-link" href="/Gestion_d_Arréts">Gestion d'arréts</a>
                 </li>
-                <li class = "nav-item ">
-                    <a class = "nav-link" href = "/Gestion_Produits">Gestion produits</a>
+                <li class="nav-item ">
+                    <a class="nav-link" href="/Gestion_Produits">Gestion produits</a>
                 </li>
-                <li class = "nav-item ">
-                    <a class = "nav-link" href = "Afficher">Afficher</a>
+                <li class="nav-item ">
+                    <a class="nav-link" href="Afficher">Afficher</a>
                 </li>
             </ul>
         </div>
     </nav>
-    <form action="#" method="post">
+    <form th:action="@{/postWorkPeiod}" th:object="${workperiod}" method="post">
         <h2 class="mt-4">Submit an quantity</h2>
         <hr/>
         <!-- Form levels error messages here -->
@@ -42,111 +42,63 @@
                 <span class="text-danger"> </span>
             </div>
         </div>
-        <div class="container-fluid">
 
-            <div class="row">
-                <div class="col-6">
-                    <div class="form-group row ">
-                        <label for="" class="col-sm-2 col-form-label">Categorie d'arrets</label>
-                        <div class="col-sm-4">
-                            <select class="form-control" placeholder="Mandatory">
-                                <option>Large select</option>
-                                <option>Large select2</option>
-                                <option>Large select1</option>
-                            </select>
 
-                        </div>
-                        <div class="col-sm-4">
-                            <span class="text-danger"> </span>
-                        </div>
-                    </div>
+        <div class="container">
+
+            <div class="form-group row col-6 ">
+                <label for="" class="col-sm-2 col-form-label mr-0"><h4>produit</h4></label>
+                <div class="col-sm-4">
+                    <input th:field="*{productId}" type="text" class="form-control" placeholder="1">
                 </div>
-                <div class="col-6">
-                    <div class="form-group row ">
-                        <label for="" class="col-sm-2 col-form-label mr-0">types d'arrets</label>
-                        <div class="col-sm-4">
-                            <select class="form-control" placeholder="Mandatory">
-                                <option>Large select</option>
-                                <option>Large select2</option>
-                                <option>Large select1</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-4">
-                            <span class="text-danger"> </span>
-                        </div>
-                    </div>
+                <div class="col-sm-4">
+                    <span class="text-danger"> </span>
+                </div>
+                <hr/>
+
+            </div>
+            <div class="form-group row col-6">
+                <label for="" class="col-3 col-form-label mr-0"><h4>Face</h4></label>
+                <input class="col-1" type="radio" id="top"  th:filed="*{face}" name="face" value="top"  th:checked="${workperiod.face == 'top'}">
+                <label class="col-2"  for="top"><h5>Top</h5></label><br>
+                <input  class="col-1"  type="radio" id="bottom"  th:filed="*{face}"   name="face" value="bottom"  th:checked="${workperiod.face == 'bottom'}">
+                <label  class="col-2" for="bottom"><h5>bottom</h5></label><br>
+                <hr/>
+            </div>
+
+            <div class="form-group row col-6">
+                <label for="" class="col-sm-2 col-form-label mr-0 row"><h4>Equipe</h4></label>
+                    <select class="form-control" placeholder="Equipe" aria-label="Default select example"
+                            th:field="*{shift}">
+                        <option value="'shift1'" text="Equipe 1">Equipe 1</option>
+                        <option value="'shift2'" text="Equipe 2 ">Equipe 2</option>
+                        <option value="'shift3'" text="Equipe 3 ">Equipe 3</option>
+                    </select>
+                <hr/>
+
+            </div>
+
+                <div class="form-group row col-6">
+                    <label for="" class="raw"><h4> Temp de debut</h4></label>
+                    <input class="form-control raw" rows="2" type="time" th:field="*{startTime}"
+                           placeholder="Max. 50 chars"></input>
+            </div>
+            <hr/>
+            <div class="form-group row">
+                <div class="col-sm-10">
+                    <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
             </div>
+
+
+
+
         </div>
 
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-6">
-
-                    <div class="form-group row ">
-                        <label for="" class="col-sm-2 col-form-label mr-0">Heure Dedut</label>
-                        <div class="col-sm-4">
-                            <input type="time" class="form-control" placeholder="00:00">
-                        </div>
-                        <div class="col-sm-4">
-                            <span class="text-danger"> </span>
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <span class="text-danger"> </span>
-                    </div>
-                </div>
-                <div calss="col-6 ">
-                    <div class="form-group row">
-                        <label for="" class="col-6 col-form-label mr-0">Heure de fin</label>
-                        <input type="time" class="form-control col-6" placeholder="00:00">
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- ######################### Third line ################################ !-->
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-6">
-                    <div class="form-group">
-                        <label for="" class="row">Description</label>
-                        <div class="row">
-                            <textarea class="form-control col-10"  rows="2" placeholder="Description"></textarea>
-                        </div>
-                    </div>
-                </div>
-                <div calss="col-6 ">
-                    <div class="form-group row">
-                        <label for=""  class="raw">Cause d'arréts</label>
-                        <textarea class="form-control raw" rows="2"  placeholder="Max. 50 chars"></textarea>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <div class="form-group row">
-            <div class="col-sm-10">
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </div>
-        </div>
 
     </form>
+
+
 </div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>

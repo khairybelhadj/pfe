@@ -1,0 +1,56 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width = device-width, initial-scale = 1, shrink-to-fit = no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <title>Asteel Flash Tunisie</title>
+</head>
+<body>
+<div class="container">
+    <nav class="navbar navbar-expand-sm navbar-dark bg-secondary">
+        <a class="navbar-brand" href="homepage-static.html">Asteel Flash</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="/Gestion_Quatités">Gestion quatités</a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="/Gestion_d_Arréts">Gestion d'arréts</a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="/Gestion_Produits">Gestion produits</a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="Afficher">Afficher</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="row">
+        <div class="col-8">
+            <div class="row">
+                <h2 class="mt-4">Jour de travaille: </h2>
+                <h2 class="mt-4" th:text="${date}"></h2>
+            </div>
+
+        </div>
+        <div style="padding-top:20px;" class="col-4">
+            <a th:href="@{/add/workPeriod}">
+                <button type="button" class="btn btn-primary ">Ajouter une periode du travaille</button>
+            </a>
+
+        </div>
+        <hr/>
+
+    </div>
+
+</div>
+</body>
+</html>

@@ -1,15 +1,24 @@
 package com.example.pfe.controller.dto;
 
 import com.example.pfe.model.enumuration.Jour;
+import lombok.Data;
 
 import javax.persistence.Column;
+import java.sql.Time;
 import java.time.Duration;
+import java.time.LocalTime;
 
+@Data
 public class WorkPeriodDto {
     private Integer nombresCartes;
+
+    private String startTime;
     private Duration cycleTempsTheorique;
     private Duration tempsTheoriqueRealisation;
-    private boolean face;
+    private Boolean top ;
+    private Boolean bottom ;
+
+    private  String face;
     private String shift;
     private Jour jour;
     private Integer nombreCarteBonne;
@@ -19,5 +28,5 @@ public class WorkPeriodDto {
      * Association
      */
     private Integer productId;
-    private  Integer workerId;
+    private Integer workerId;
 }

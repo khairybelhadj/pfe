@@ -3,6 +3,7 @@ package com.example.pfe.persistence.entiy;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Data
@@ -14,7 +15,7 @@ public class WorkerEntity {
     private String password;
 
     @OneToMany
-    private WorkPeriodEntity workPeriodEntity;
+    private List<WorkPeriodEntity> workPeriodEntities;
 
 
 
