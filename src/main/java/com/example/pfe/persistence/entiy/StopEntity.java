@@ -1,6 +1,7 @@
 package com.example.pfe.persistence.entiy;
 
 import com.example.pfe.controller.dto.StopDto;
+import com.example.pfe.model.enumuration.CategorieDarrets;
 import com.example.pfe.model.enumuration.TypesDarrets;
 
 import lombok.Data;
@@ -22,6 +23,7 @@ public class StopEntity {
     private Integer id;
     @Column(name = "types_arrets")
     private TypesDarrets typesDarrets;
+    private CategorieDarrets categorieDarrets;
     private LocalTime starttime;
     private LocalTime end_time;
     private String cause_stop;

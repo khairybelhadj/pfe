@@ -1,6 +1,7 @@
 package com.example.pfe.model;
 
 
+import com.example.pfe.model.enumuration.CategorieDarrets;
 import com.example.pfe.model.enumuration.TypesDarrets;
 import lombok.*;
 
@@ -13,6 +14,7 @@ public class Stop {
 
     private Integer id;
     private TypesDarrets typesDarrets;
+    private CategorieDarrets categorieDarrets;
     private LocalTime start_time;
     private LocalTime end_time;
     private String cause_stop;

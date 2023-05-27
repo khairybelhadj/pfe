@@ -26,8 +26,8 @@ public class WorkPeriodEntity {
     private Jour jour;
     @Column(name = "nombre_carte_bonne")
     private Integer nombreCarteBonne;
-    @Column(name = "nombre_carte_mauvaie")
-    private Integer nombreCarteMauvaie;
+    @Column(name = "nombre_carte_mauvais")
+    private Integer nombreCarteMauvais;
 
     @ManyToOne
     private ProductEntity productEntity;

@@ -29,6 +29,7 @@ public class DataBaseConfigService {
 
 
     public StopEntity createStop(StopEntity stop) {
+
         return stopRepo.save(stop);
     }
     public List<StopEntity> saveStop(@NotNull StopDto stop) {

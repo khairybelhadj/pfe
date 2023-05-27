@@ -13,6 +13,9 @@ public class WorkerEntity {
     private String login;
     private String password;
 
+    @OneToMany
+    private WorkPeriodEntity workPeriodEntity;
+
 
 
 }
