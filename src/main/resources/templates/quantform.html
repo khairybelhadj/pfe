@@ -34,7 +34,7 @@
         </div>
     </nav>
     <form th:action="@{/postWorkPeiod}" th:object="${workperiod}" method="post">
-        <h2 class="mt-4">Submit an quantity</h2>
+        <h2 class="mt-4">Gestion de Quantité</h2>
         <hr/>
         <!-- Form levels error messages here -->
         <div class="form-group row ">
@@ -47,9 +47,9 @@
         <div class="container">
 
             <div class="form-group row col-6 ">
-                <label for="" class="col-sm-2 col-form-label mr-0"><h4>produit</h4></label>
-                <div class="col-sm-4">
-                    <input th:field="*{productId}" type="text" class="form-control" placeholder="1">
+                <label for="" class="col-sm-6 col-form-label mr-0"><h4>Nom de Produit</h4></label>
+                <div class="col-sm-6">
+                    <input th:field="*{productId}" type="text" class="form-control" placeholder="Entrer Produit">
                 </div>
                 <div class="col-sm-4">
                     <span class="text-danger"> </span>
@@ -59,10 +59,10 @@
             </div>
             <div class="form-group row col-6">
                 <label for="" class="col-3 col-form-label mr-0"><h4>Face</h4></label>
-                <input class="col-1" type="radio" id="top"  th:filed="*{face}" name="face" value="top"  th:checked="${workperiod.face == 'top'}">
-                <label class="col-2"  for="top"><h5>Top</h5></label><br>
-                <input  class="col-1"  type="radio" id="bottom"  th:filed="*{face}"   name="face" value="bottom"  th:checked="${workperiod.face == 'bottom'}">
-                <label  class="col-2" for="bottom"><h5>bottom</h5></label><br>
+                <input class="col-sm-1" type="radio" id="top"  th:filed="*{face}" name="face" value="top"  th:checked="${workperiod.face == 'top'}">
+                <label class="col-2"  for="top"><h6>Top</h6></label><br>
+                <input  class="col-sm-1"  type="radio" id="bottom"  th:filed="*{face}"   name="face" value="bottom"  th:checked="${workperiod.face == 'bottom'}">
+                <label  class="col-2" for="bottom"><h6>bottom</h6></label><br>
                 <hr/>
             </div>
 
@@ -70,7 +70,8 @@
                 <label for="" class="col-sm-2 col-form-label mr-0 row"><h4>Equipe</h4></label>
                     <select class="form-control" placeholder="Equipe" aria-label="Default select example"
                             th:field="*{shift}">
-                        <option value="'shift1'" text="Equipe 1">Equipe 1</option>
+                        <option value="">entrez votre equipe</option>
+                        <option value="'shift1'" text="Equipe 1 ">Equipe 1</option>
                         <option value="'shift2'" text="Equipe 2 ">Equipe 2</option>
                         <option value="'shift3'" text="Equipe 3 ">Equipe 3</option>
                     </select>
@@ -79,7 +80,7 @@
             </div>
 
                 <div class="form-group row col-6">
-                    <label for="" class="raw"><h4> Temp de debut</h4></label>
+                    <label for="" class="raw"><h4> Temp de Début</h4></label>
                     <input class="form-control raw" rows="2" type="time" th:field="*{startTime}"
                            placeholder="Max. 50 chars"></input>
             </div>
