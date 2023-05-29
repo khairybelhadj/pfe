@@ -1,6 +1,7 @@
 package com.example.pfe.model.enumuration;
 
 public enum Jour {
+
     LUNDI,
     MARDI,
     MERCREDI,

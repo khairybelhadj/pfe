@@ -52,5 +52,26 @@
     </div>
 
 </div>
+
+<table class=" container table">
+    <thead class="thead-light">
+    <tr>
+        <th class="text-left">Jour</th>
+        <th class="text-left">product</th>
+        <th class="text-left">face</th>
+        <th class="text-left">Start time</th>
+        <th class="text-left"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="workPeriodItem : ${workPeriodLIST}">
+        <td th:text="${workPeriodItem.jour}"></td>
+        <td th:text="${workPeriodItem.productId}">7</td>
+        <td th:text="${workPeriodItem.face}"></td>
+        <td th:text="${workPeriodItem.startTime}"></td>
+        <td><a href="#" class="btn btn-info" role="button">Add stop</a></td>
+    </tr>
+    </tbody>
+</table>
 </body>
 </html>

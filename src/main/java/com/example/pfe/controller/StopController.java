@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -39,10 +40,18 @@ public class StopController {
 
     @GetMapping()
     public ModelAndView getIndex() {
+
+        // create the model
         Map<String, Object> model = new HashMap<>();
-        List<String> list1 = new ArrayList<>();
+
+        // get the list od the today work period and put it into the model
+        List<WorkPeriodDto> list1 = dataBaseConfigService.getTodayWorkPeriod();
+        model.put("workPeriodLIST",list1);
+
+        // put the today date in the model
         model.put("date", LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/YYYY")));
-        model.put("key1",list1);
+
+        // creat the modelAndView
         ModelAndView modelAndView = new ModelAndView("index", model);
         return modelAndView;
     }
@@ -58,8 +67,17 @@ public class StopController {
     }
     @PostMapping("postWorkPeiod")
     public ModelAndView postWorkPeiod(WorkPeriodDto workPeriodDto){
+
+        // Print the new Work Period
         System.out.println(workPeriodDto);
-        return new ModelAndView();
+
+        //save the new Work period
+        dataBaseConfigService.saveWorkPeriod(workPeriodDto);
+
+        // Redirect to the index view
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl("/");
+        return new ModelAndView(redirectView);
     }
 
 

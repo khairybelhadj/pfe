@@ -5,6 +5,8 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.Period;
 import java.util.List;
 
@@ -13,17 +15,23 @@ import java.util.List;
 @Table(name = "work_period")
 public class WorkPeriodEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "nombres_cartes")
-    private Integer nombresCartes;
+    private Period nombresCartes;
     @Column(name = "cycle_temps_theorique")
-    private Duration cycleTempsTheorique;
+    private Period cycleTempsTheorique;
     @Column(name = "temps_theorique_realisation")
     private Duration tempsTheoriqueRealisation;
-    private boolean face;
+    private String face;
     private String shift;
+    private LocalTime startTime;
+
+    private LocalDate date;
+    @Enumerated(EnumType.STRING)
     private Jour jour;
+
     @Column(name = "nombre_carte_bonne")
     private Integer nombreCarteBonne;
     @Column(name = "nombre_carte_mauvais")
