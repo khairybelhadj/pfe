@@ -1,13 +1,10 @@
 package com.example.pfe.controller;
 
 import com.example.pfe.application.DataBaseConfigService;
+import com.example.pfe.controller.dto.ProductDto;
 import com.example.pfe.controller.dto.StopDto;
 import com.example.pfe.controller.dto.WorkPeriodDto;
-import com.example.pfe.persistence.entiy.ProductEntity;
 import com.example.pfe.persistence.entiy.StopEntity;
-import com.example.pfe.model.Stop;
-import com.example.pfe.persistence.repo.ProductRepo;
-import com.example.pfe.persistence.repo.StopRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -15,13 +12,12 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 
 @Controller
-public class StopController {
+public class AppController {
 
     @Autowired
     DataBaseConfigService dataBaseConfigService;
@@ -46,7 +42,7 @@ public class StopController {
 
         // get the list od the today work period and put it into the model
         List<WorkPeriodDto> list1 = dataBaseConfigService.getTodayWorkPeriod();
-        model.put("workPeriodLIST",list1);
+        model.put("workPeriodLIST", list1);
 
         // put the today date in the model
         model.put("date", LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/YYYY")));
@@ -55,18 +51,29 @@ public class StopController {
         ModelAndView modelAndView = new ModelAndView("index", model);
         return modelAndView;
     }
+
     @GetMapping("/add/workPeriod")
-    public ModelAndView addWorkPeriodGet(){
+    public ModelAndView addWorkPeriodGet() {
         Map<String, Object> model = new HashMap<>();
-        WorkPeriodDto workPeriodDto=new WorkPeriodDto();
+        WorkPeriodDto workPeriodDto = new WorkPeriodDto();
         workPeriodDto.setBottom(false);
         workPeriodDto.setTop(true);
-        model.put("workperiod",workPeriodDto);
+        model.put("workperiod", workPeriodDto);
         ModelAndView modelAndView = new ModelAndView("quantform", model);
         return modelAndView;
     }
+
+    @GetMapping("/add/product")
+    public ModelAndView addProductGet() {
+        Map<String, Object> model = new HashMap<>();
+        ProductDto productDto = new ProductDto();
+        model.put("productDto", productDto);
+        ModelAndView modelAndView = new ModelAndView("productForm", model);
+        return modelAndView;
+    }
+
     @PostMapping("postWorkPeiod")
-    public ModelAndView postWorkPeiod(WorkPeriodDto workPeriodDto){
+    public ModelAndView postWorkPeiod(WorkPeriodDto workPeriodDto) {
 
         // Print the new Work Period
         System.out.println(workPeriodDto);
@@ -80,10 +87,24 @@ public class StopController {
         return new ModelAndView(redirectView);
     }
 
+    @GetMapping("/add/stop")
+    public ModelAndView addStopGet(@RequestParam Integer workPeroiodId) {
+        Map<String, Object> model = new HashMap<>();
+        StopDto stopDto = new StopDto();
+        stopDto.setWorkPeriodId(workPeroiodId);
+        model.put("stopDto", stopDto);
+        ModelAndView modelAndView = new ModelAndView("arretsform", model);
+        return modelAndView;
+    }
 
-    @PostMapping("add")
-    public List<StopEntity> get(@RequestBody StopDto stopDto) {
-        return dataBaseConfigService.saveStop(stopDto);
+    @PostMapping("postStop")
+    public ModelAndView get(StopDto stopDto) {
+        System.out.println(stopDto);
+        dataBaseConfigService.saveStop(stopDto);
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl("/");
+        return new ModelAndView(redirectView);
+
     }
 
 

@@ -11,6 +11,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = "stop")
@@ -33,11 +34,11 @@ public class StopEntity {
     @JoinColumn(name = "work_period_entity_id")
     private WorkPeriodEntity workPeriodEntity;
 
-    public StopEntity(StopDto stopDto){
-        this.typesDarrets=stopDto.getTypesDarrets();
-        this.cause_stop=stopDto.getCause_stop();
-        this.description=stopDto.getDescription();
-        this.starttime=stopDto.getStarttime();
-        this.end_time=stopDto.getEnd_time();
+    public StopEntity(StopDto stopDto) {
+        this.typesDarrets =  TypesDarrets.get(stopDto.getTypesDarrets()).get();
+        this.cause_stop = stopDto.getCause_stop();
+        this.description = stopDto.getDescription();
+        this.starttime = LocalTime.parse((CharSequence) stopDto.getStarttime(), DateTimeFormatter.ofPattern("HH:mm"));
+        this.end_time = LocalTime.parse((CharSequence) stopDto.getEnd_time(), DateTimeFormatter.ofPattern("HH:mm"));
     }
 }

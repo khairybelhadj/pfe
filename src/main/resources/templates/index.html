@@ -43,7 +43,7 @@
         </div>
         <div style="padding-top:20px;" class="col-4">
             <a th:href="@{/add/workPeriod}">
-                <button type="button" class="btn btn-primary ">Ajouter une periode du travaille</button>
+                <button type="button" class="btn btn-primary " >Ajouter une periode du travaille</button>
             </a>
 
         </div>
@@ -60,6 +60,8 @@
         <th class="text-left">product</th>
         <th class="text-left">face</th>
         <th class="text-left">Start time</th>
+        <th class="text-left">Stop</th>
+
         <th class="text-left"></th>
     </tr>
     </thead>
@@ -69,7 +71,9 @@
         <td th:text="${workPeriodItem.productId}">7</td>
         <td th:text="${workPeriodItem.face}"></td>
         <td th:text="${workPeriodItem.startTime}"></td>
-        <td><a href="#" class="btn btn-info" role="button">Add stop</a></td>
+        <td th:text="${workPeriodItem.stopCount}"></td>
+
+        <td><a th:href="@{/add/stop(workPeroiodId=${workPeriodItem.id})}" class="btn btn-info" role="button">Add stop</a></td>
     </tr>
     </tbody>
 </table>

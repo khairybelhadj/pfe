@@ -1,4 +1,4 @@
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width = device-width, initial-scale = 1, shrink-to-fit = no">
@@ -7,33 +7,34 @@
 </head>
 <body>
 <div class="container">
-    <nav class = "navbar navbar-expand-sm navbar-dark bg-secondary">
-        <a class = "navbar-brand" href = "homepage-static.html">Asteel Flash</a>
-        <button class = "navbar-toggler" type = "button" data-toggle = "collapse"
-                data-target = "#navbarSupportedContent"
-                aria-controls = "navbarSupportedContent" aria-expanded = "false"
-                aria-label = "Toggle navigation">
-            <span class = "navbar-toggler-icon"></span>
+    <nav class="navbar navbar-expand-sm navbar-dark bg-secondary">
+        <a class="navbar-brand" href="homepage-static.html">Asteel Flash</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class = "collapse navbar-collapse" id = "navbarSupportedContent">
-            <ul class = "navbar-nav mr-auto">
-                <li class = "nav-item">
-                    <a class = "nav-link" href = "/Gestion_Quatités">Gestion quatités</a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/Gestion_Quatités">Gestion quatités</a>
                 </li>
-                <li class = "nav-item active">
-                    <a class = "nav-link" href = "/Gestion_d_Arréts">Gestion d'arréts</a>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/Gestion_d_Arréts">Gestion d'arréts</a>
                 </li>
-                <li class = "nav-item ">
-                    <a class = "nav-link" href = "/Gestion_produits">Gestion produits</a>
+                <li class="nav-item ">
+                    <a class="nav-link" href="/Gestion_produits">Gestion produits</a>
                 </li>
-                <li class = "nav-item ">
-                    <a class = "nav-link" href = "Configuration">Configuration</a>
+                <li class="nav-item ">
+                    <a class="nav-link" href="Configuration">Configuration</a>
                 </li>
             </ul>
         </div>
     </nav>
-    <form action="#" method="post">
+    <form th:action="@{/postStop}" th:object="${stopDto}" method="post">
+
         <h2 class="mt-4">Gestion des Arrêts</h2>
         <hr/>
         <!-- Form levels error messages here -->
@@ -49,12 +50,12 @@
                     <div class="form-group row ">
                         <label for="" class="col-sm-5 col-form-label"><h5>Catégories d'Arrêts</h5></label>
                         <div class="col-sm-5">
-                            <select class="form-control" placeholder="Mandatory" id="list1">
+                            <select th:field="*{categorieDarrets}" class="form-control" placeholder="Mandatory" id="list1">
                                 <option value="">Select an option</option>
-                                <option value="1">Option 1</option>
-                                <option value="2">Option 2</option>
-                                <option value="3">Option 3</option>
-                                <option value="4">Option 4</option>
+                                <option value="ARRETPROGRAMMES">ARRETPROGRAMMES 1</option>
+                                <option value="ChangementDeSerie">ChangementDeSerie 2</option>
+                                <option value="DisfonctionementOrganisationnel">Option 3</option>
+                                <option value="pannes">pannes 4</option>
                                 <option value="5">Option 5</option>
                                 <option value="6">Option 6</option>
                                 <option value="7">Option 7</option>
@@ -71,7 +72,7 @@
                     <div class="form-group row ">
                         <label for="" class="col-sm-5 col-form-label mr-0"><h5>Types d'Arrêts</h5></label>
                         <div class="col-sm-5">
-                            <select class="form-control" placeholder="Mandatory" id="list2">
+                            <select  th:field="*{typesDarrets}" class="form-control" placeholder="Mandatory" id="list2">
                                 <option value="">Select an option</option>
                             </select>
                         </div>
@@ -90,7 +91,7 @@
                     <div class="form-group row ">
                         <label for="" class="col-sm-5 col-form-label mr-0"><h5>Heure de Début</h5></label>
                         <div class="col-sm-4">
-                            <input type="time" class="form-control" placeholder="00:00">
+                            <input th:field="*{starttime}"  type="time" class="form-control" placeholder="00:00">
                         </div>
                         <div class="col-sm-4">
                             <span class="text-danger"> </span>
@@ -101,80 +102,80 @@
                     </div>
                     <hr/>
                 </div>
-                </div>
+            </div>
 
-                <div calss="row">
-                    <div class="col-6">
+            <div calss="row">
+                <div class="col-6">
                     <div class="form-group row">
                         <label for="" class="col-sm-5   col-form-label mr-0"><h5>Heure de Fin</h5></label>
                         <div class="col-sm-4">
-                        <input type="time" class="form-control " placeholder="00:00">
+                            <input  th:field="*{end_time}" type="time" class="form-control " placeholder="00:00">
+                        </div>
                     </div>
-                </div>
                     <hr/>
+                </div>
             </div>
-        </div>
 
 
-        <!-- ######################### Third line ################################ !-->
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-6">
-                    <div class="form-group">
-                        <label for="" class="row"><h5>Description</h5></label>
-                        <div class="row">
-                        <textarea class="form-control col-9"  rows="3" placeholder="Description"></textarea>
+
+            <!-- ######################### Third line ################################ !-->
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="" class="row"><h5>Description</h5></label>
+                            <div class="row">
+                                <textarea th:field="*{description}"  class="form-control col-9" rows="3" placeholder="Description"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div calss="col-6 ">
+                        <div class="form-group row">
+                            <label for="" class="raw"><h5>Causes d'Arrêts</h5></label>
+                            <div class="col-10">
+                                <textarea th:field="*{cause_stop}"  class="form-control col-10" rows="3" placeholder="Max. 50 chars"></textarea>
+                            </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div calss="col-6 ">
-                    <div class="form-group row">
-                        <label for=""  class="raw"><h5>Causes d'Arrêts</h5></label>
-                        <div class="col-10">
-                            <textarea class="form-control col-10" rows="3"  placeholder="Max. 50 chars"></textarea>
-                        </div>
-                    </div>
+
+            <div class="form-group row">
+                <div class="col-sm-10">
+                    <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
             </div>
         </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <div class="form-group row">
-            <div class="col-sm-10">
-                <button type="submit" class="btn btn-primary">Submit</button>
+        <div calss="row" style="  visibility: hidden;">
+            <div class="col-6">
+                <div class="form-group row">
+                    <label for="" class="col-sm-5   col-form-label mr-0"><h5>Heure de Fin</h5></label>
+                    <div class="col-sm-4">
+                        <input  th:field="*{workPeriodId}" type="text" class="form-control " th:value="${stopDto.workPeriodId}">
+                    </div>
+                </div>
+                <hr/>
             </div>
         </div>
-
     </form>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-<script >
+<script>
 
     // Define the options for the second list
-const list2options = {
-  "1": ["Pause", "Réunion", "Formation", "Maintenance préventive niveaux 1", "Validation EI", "Modification de la ligne", "Arrêt planifié par la production"],
-  "2": ["Démarrage/Arrêt de la ligne", "changement de la série", "stabilisation de ma four"],
-  "3": ["Arrêt dû à un manque de kit/outillage"," absence de personnel"," instructions de travail manquantes, problèmes avec l'outillage", "coupure de courant/réseau"," changement de planning de dernière minute", "rupture de composants"],
-  "4": ["Convoyeur/Dépileur", "Sérigraphie", "P1", "P2","P3","FOUR", "Inspection AOI", "Autres Dérives"]
-  "5": ["Convoyeur/Dépileur", "Sérigraphie", "P1", "P2","P3","FOUR", "Inspection AOI","Amélioration Process/Optimisation", "Autres Dérives"]
-  "6": ["Reprise piéces en défauts Qualité", "Arrêts Problème Qualité", "Réajustement équipement suite défauts"]
+const list2Options = {
+  "ARRETPROGRAMMES": ["Pause", "Réunion", "Formation", "Maintenance préventive niveaux 1", "Validation EI", "Modification de la ligne", "Arrêt planifié par la production"],
+  "ChangementDeSerie": ["Démarrage/Arrêt de la ligne", "changement de la série", "stabilisation de ma four"],
+  "DisfonctionementOrganisationnel": ["Arrêt dû à un manque de kit/outillage"," absence de personnel"," instructions de travail manquantes, problèmes avec l'outillage", "coupure de courant/réseau"," changement de planning de dernière minute", "rupture de composants"],
+  "pannes": ["Convoyeur/Dépileur", "Sérigraphie", "P1", "P2","P3","FOUR", "Inspection AOI", "Autres Dérives"],
+  "5": ["Convoyeur/Dépileur", "Sérigraphie", "P1", "P2","P3","FOUR", "Inspection AOI","Amélioration Process/Optimisation", "Autres Dérives"],
+  "6": ["Reprise piéces en défauts Qualité", "Arrêts Problème Qualité", "Réajustement équipement suite défauts"],
   "7": ["Fermeture d'usine", "Pas de Busuness suffisant", "Maintenance Préventive", "Jour féries"]
 };
 
@@ -184,6 +185,9 @@ const list2 = document.getElementById("list2");
 
 // When an option is selected in the first list
 list1.addEventListener("change", function() {
+
+      console.log(1);
+
   // Clear the options from the second list
   list2.innerHTML = "<option value=''>Select an option</option>";
 
@@ -192,9 +196,12 @@ list1.addEventListener("change", function() {
 
   // If a value is selected
   if (selectedValue) {
+        console.log(list2Options[selectedValue]);
+
     // Loop through the options for the second list
     for (let i = 0; i < list2Options[selectedValue].length; i++) {
       // Create a new option element
+      console.log(1);
       const option = document.createElement("option");
       option.text = list2Options[selectedValue][i];
       option.value = list2Options[selectedValue][i];
@@ -204,6 +211,7 @@ list1.addEventListener("change", function() {
     }
   }
 });
+
 
 </script>
 </body>
