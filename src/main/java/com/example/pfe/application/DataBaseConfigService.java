@@ -1,13 +1,12 @@
 package com.example.pfe.application;
 
+import com.example.pfe.controller.dto.ConfigDto;
 import com.example.pfe.controller.dto.ProductDto;
 import com.example.pfe.controller.dto.StopDto;
 import com.example.pfe.controller.dto.WorkPeriodDto;
 import com.example.pfe.model.enumuration.Jour;
-import com.example.pfe.persistence.entiy.ProductEntity;
-import com.example.pfe.persistence.entiy.StopEntity;
-import com.example.pfe.persistence.entiy.WorkPeriodEntity;
-import com.example.pfe.persistence.entiy.WorkerEntity;
+import com.example.pfe.persistence.entiy.*;
+import com.example.pfe.persistence.repo.ConfigRepo;
 import com.example.pfe.persistence.repo.ProductRepo;
 import com.example.pfe.persistence.repo.StopRepo;
 import com.example.pfe.persistence.repo.WorkPeriodRepo;
@@ -47,7 +46,8 @@ public class DataBaseConfigService {
      */
     @Autowired
     private WorkPeriodRepo workPeriodRepo;
-
+    @Autowired
+    private ConfigRepo configRepo;
 
     public StopEntity createStop(StopEntity stop) {
 
@@ -80,6 +80,15 @@ public class DataBaseConfigService {
         return stopEntities;
 
     }
+    public @NotNull ConfigDto saveConfiguration (@NotNull ConfigDto configDto){
+        // create the new configuration
+        ConfigEntity newConfigEntity = new ConfigEntity();
+        BeanUtils.copyProperties(configDto,newConfigEntity);
+        // save configuration
+        configRepo.save(newConfigEntity);
+        return null ;
+    }
+
 
     /**
      * @param workPeriodDto

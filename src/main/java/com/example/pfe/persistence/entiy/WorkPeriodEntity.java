@@ -15,7 +15,7 @@ import java.util.List;
 @Table(name = "work_period")
 public class WorkPeriodEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Integer id;
 
     @Column(name = "nombres_cartes")
