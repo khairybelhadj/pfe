@@ -1,4 +1,4 @@
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width = device-width, initial-scale = 1, shrink-to-fit = no">
@@ -7,152 +7,98 @@
 </head>
 <body>
 <div class="container">
-    <nav class = "navbar navbar-expand-sm navbar-dark bg-secondary">
-        <a class = "navbar-brand" href = "homepage-static.html">Asteel Flash</a>
-        <button class = "navbar-toggler" type = "button" data-toggle = "collapse"
-                data-target = "#navbarSupportedContent"
-                aria-controls = "navbarSupportedContent" aria-expanded = "false"
-                aria-label = "Toggle navigation">
-            <span class = "navbar-toggler-icon"></span>
+    <nav class="navbar navbar-expand-sm navbar-dark bg-secondary">
+        <a class="navbar-brand" href="homepage-static.html">Asteel Flash</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class = "collapse navbar-collapse" id = "navbarSupportedContent">
-            <ul class = "navbar-nav mr-auto">
-                <li class = "nav-item">
-                    <a class = "nav-link" href = "/Gestion_Quatités">Gestion quatités</a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" th:href="@{/}">Gestion quatités</a>
                 </li>
-                <li class = "nav-item ">
-                    <a class = "nav-link" href = "/Gestion_d_Arréts">Gestion d'arréts</a>
+                <li class="nav-item ">
+                    <a class="nav-link" href="/Gestion_d_Arréts">Gestion d'arréts</a>
                 </li>
-                <li class = "nav-item ">
-                    <a class = "nav-link active" href = "/Gestion_Produits">Gestion produits</a>
+                <li class="nav-item ">
+                    <a class="nav-link" href="/Gestion_Produits">Gestion produits</a>
                 </li>
-                <li class = "nav-item ">
-                    <a class = "nav-link" href = "Configuration">Configuration</a>
+                <li class="nav-item">
+                    <a class="nav-link" href="/Ajouter_Operateur">Ajouter Operateur</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/Ajouter_Produit">Ajouter Produit</a>
                 </li>
             </ul>
+            <a class="navbar-brand" th:href="@{Deconnexion}">Déconnexion</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
         </div>
     </nav>
-    <form action="#" method="post">
-        <h2 class="mt-4">Produit</h2>
+    <div class="row">
+        <div class="col-8">
+            <div class="row">
+
+                <h2 class="mt-4">Jour de travaille: </h2>
+                <h2 class="mt-4" th:text="${date}"></h2>
+            </div>
+
+        </div>
+        <div style="padding-top:20px;" class="col-4">
+            <a th:href="@{/add/workPeriod}">
+                <button type="button" class="btn btn-primary ">Ajouter une periode du travaille</button>
+            </a>
+
+        </div>
         <hr/>
-        <!-- Form levels error messages here -->
-        <div class="form-group row ">
-            <div class="col-sm-8">
-                <span class="text-danger"> </span>
-            </div>
-        </div>
 
+    </div>
 
-
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-6">
-                    <div class="form-group row ">
-                        <label for="" class="col-sm-3 col-form-label">Nom Produit</label>
-                        <div class="col-sm-4">
-                            <select class="form-control" placeholder="Mandatory">
-                                <option>Large select</option>
-                                <option>Large select2</option>
-                                <option>Large select1</option>
-                            </select>
-
-                        </div>
-                        <div class="col-sm-4">
-                            <span class="text-danger"> </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="form-group row ">
-                        <label for="" class="col-sm-3 col-form-label mr-0">Jour</label>
-                        <div class="col-sm-4">
-                            <select class="form-control" placeholder="Mandatory">
-                                <option>Large select</option>
-                                <option>Large select2</option>
-                                <option>Large select1</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-4">
-                            <span class="text-danger"> </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-6">
-                    <div class="form-group row ">
-                        <label for="" class="col-sm-5    col-form-label mr-0">Cycle Temps Theorique</label>
-                        <div class="col-sm-4">
-                            <input type="time" class="form-control" placeholder="00:00">
-                        </div>
-                        <div class="col-sm-4">
-                            <span class="text-danger"> </span>
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <span class="text-danger"> </span>
-                    </div>
-                </div>
-                <div calss="col-9 ">
-                    <div class="form-group row">
-                        <label for="" class="col-10 col-form-label mr-0">Temps Theorique Realisation</label>
-                        <div class="col-10">
-                        <input type="time" class="form-control " placeholder="00:00">
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- ######################### Third line ################################ !-->
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-6">
-                    <div class="form-group">
-                        <label for="" class="row">Description</label>
-                        <div class="row">
-                            <textarea class="form-control col-10"  rows="2" placeholder="Description"></textarea>
-                        </div>
-                    </div>
-                </div>
-                <div calss="col-6 ">
-                    <div class="form-group row">
-                        <label for=""  class="raw">Cause d'arréts</label>
-                        <textarea class="form-control raw" rows="2"  placeholder="Max. 50 chars"></textarea>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <div class="form-group row">
-            <div class="col-sm-10">
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </div>
-        </div>
-
-    </form>
 </div>
+<div class="container">
+    <div th:each="workPeriodItem : ${workPeriodLIST}">
+    <div class="row">
+        <h3 class="text-left col-3 p-3 mb-2 bg-secondary text-white" >Jour</h3>
+        <h3 class="text-left col-3 p-3 mb-2 bg-secondary text-white">product</h3>
+        <h3 class="text-left col-3 p-3 mb-2 bg-secondary text-white">face</h3>
+        <h3 class="text-left col-3 p-3 mb-2 bg-secondary text-white">Start time</h3>
+    </div>
+    <hr/>
+        <div class="row">
+            <h5 class="col-3 text-success " th:text="${workPeriodItem.jour}"></h5>
+            <h5 class="col-3 text-success " th:text="${workPeriodItem.nomProduit}"></h5>
+            <h5 class="col-3 text-success " th:text="${workPeriodItem.face}"></h5>
+            <h5 class="col-3 text-success " th:text="${workPeriodItem.startTime}"></h5>
+            <hr/>
+        </div>
+        <hr/>
+        <div class="row">
+            <h4 class="text-left col-3  bg-info text-white">les Arrêts :</h4>
+            <h4 class="text-left col-3 bg-info text-white">Catégories d'Arrêts</h4>
+            <h4 class="text-left col-3  bg-info text-white">Types d'Arrêts</h4>
+            <h4 class="text-left col-3  bg-info text-white">Heure de Début</h4>
+        </div>
+        <hr/>
 
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+        <div class="row" th:each="stopItem : ${workPeriodItem.stopDtos}">
+            <h4 class="col-3"></h4>
+            <h5 class="col-3" th:text="${stopItem.categorieDarrets}"></h5>
+            <h5 class="col-3" th:text="${stopItem.typesDarrets}"></h5>
+            <h5 class="col-3" th:text="${stopItem.starttime}"></h5>
+        </div>
+        <hr/>
+        <hr/>
+
+    </div>
+
+</div>
 </body>
 </html>

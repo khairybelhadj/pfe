@@ -10,13 +10,15 @@ import java.util.List;
 public class WorkerEntity {
     @Id
     @Column(name = "id")
+    @GeneratedValue
     private Integer Id;
-    private String login;
+    private String workerName;
     private String password;
+    private String teams;
+    private String type;
 
     @OneToMany
     private List<WorkPeriodEntity> workPeriodEntities;
-
 
 
 }

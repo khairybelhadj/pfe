@@ -11,5 +11,7 @@ import java.time.Period;
 public class ProductDto {
     private  Integer id;
     private  String nomProduit;
-    private  Period cycleTempsTheorique;
+    private  String cycleTempsTheoriqueTop;
+    private  String cycleTempsTheoriqueBottom;
+    private Integer nb_carte;
 }

@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import java.sql.Time;
 import java.time.Duration;
 import java.time.LocalTime;
+import java.util.List;
 
 @Data
 public class WorkPeriodDto {
@@ -25,10 +26,12 @@ public class WorkPeriodDto {
     private Integer nombreCarteBonne;
     private Integer nombreCarteMauvaie;
     private Integer stopCount;
+    private List<StopDto> stopDtos;
 
     /**
      * Association
      */
     private Integer productId;
     private Integer workerId;
+    private String nomProduit;
 }

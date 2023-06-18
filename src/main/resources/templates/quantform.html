@@ -19,7 +19,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" href="/Gestion_Quatités">Gestion quatités</a>
+                    <a class="nav-link active" th:href="@{/}">Gestion quatités</a>
                 </li>
                 <li class="nav-item ">
                     <a class="nav-link" href="/Gestion_d_Arréts">Gestion d'arréts</a>
@@ -27,11 +27,21 @@
                 <li class="nav-item ">
                     <a class="nav-link" href="/Gestion_Produits">Gestion produits</a>
                 </li>
-                <li class="nav-item ">
-                    <a class="nav-link" href="Configuration">Configuration</a>
+                <li class = "nav-item">
+                    <a class = "nav-link" href = "/Ajouter_Operateur">Ajouter Operateur</a>
+                </li>
+                <li class = "nav-item">
+                    <a class = "nav-link" href = "/Ajouter_Produit">Ajouter Produit</a>
                 </li>
             </ul>
         </div>
+        <a class="navbar-brand" th:href="@{Deconnexion}">Déconnexion</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
     </nav>
     <form th:action="@{/postWorkPeiod}" th:object="${workperiod}" method="post">
         <h2 class="mt-4">Gestion de Quantité</h2>
@@ -49,7 +59,7 @@
             <div class="form-group row col-6 ">
                 <label for="" class="col-sm-6 col-form-label mr-0"><h4>Nom de Produit</h4></label>
                 <div class="col-sm-6">
-                    <input th:field="*{productId}" type="text" class="form-control" placeholder="Entrer Produit">
+                    <input th:field="*{nomProduit}" type="text" class="form-control" placeholder="Entrer Produit">
                 </div>
                 <div class="col-sm-4">
                     <span class="text-danger"> </span>

@@ -1,6 +1,7 @@
 package com.example.pfe.persistence.entiy;
 
 import com.example.pfe.model.enumuration.Jour;
+import com.sun.istack.NotNull;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -15,7 +16,7 @@ import java.util.List;
 @Table(name = "work_period")
 public class WorkPeriodEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Integer id;
 
     @Column(name = "nombres_cartes")
@@ -38,13 +39,12 @@ public class WorkPeriodEntity {
     private Integer nombreCarteMauvais;
 
     @ManyToOne
-    private ProductEntity productEntity;
+    private ProductEntity productEntity ;
 
     @ManyToOne
     private WorkerEntity workerEntity;
     @OneToMany(cascade = CascadeType.ALL)
     List<StopEntity> stopEntities;
-
 
 
 }

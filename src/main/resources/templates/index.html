@@ -19,7 +19,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" href="/Gestion_Quatités">Gestion quatités</a>
+                    <a class="nav-link active" th:href="@{/}">Gestion quatités</a>
                 </li>
                 <li class="nav-item ">
                     <a class="nav-link" href="/Gestion_d_Arréts">Gestion d'arréts</a>
@@ -27,15 +27,26 @@
                 <li class="nav-item ">
                     <a class="nav-link" href="/Gestion_Produits">Gestion produits</a>
                 </li>
-                <li class="nav-item ">
-                    <a class="nav-link" href="Configuration">Configuration</a>
+                <li class = "nav-item">
+                    <a class = "nav-link" href = "/Ajouter_Operateur">Ajouter Operateur</a>
+                </li>
+                <li class = "nav-item">
+                    <a class = "nav-link" href = "/Ajouter_Produit">Ajouter Produit</a>
                 </li>
             </ul>
+            <a class="navbar-brand" th:href="@{Deconnexion}">Déconnexion</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
         </div>
     </nav>
     <div class="row">
         <div class="col-8">
             <div class="row">
+
                 <h2 class="mt-4">Jour de travaille: </h2>
                 <h2 class="mt-4" th:text="${date}"></h2>
             </div>
@@ -68,7 +79,7 @@
     <tbody>
     <tr th:each="workPeriodItem : ${workPeriodLIST}">
         <td th:text="${workPeriodItem.jour}"></td>
-        <td th:text="${workPeriodItem.productId}">7</td>
+        <td th:text="${workPeriodItem.nomProduit}"></td>
         <td th:text="${workPeriodItem.face}"></td>
         <td th:text="${workPeriodItem.startTime}"></td>
         <td th:text="${workPeriodItem.stopCount}"></td>

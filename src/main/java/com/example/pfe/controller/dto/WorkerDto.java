@@ -1,5 +1,6 @@
 package com.example.pfe.controller.dto;
 
+import com.example.pfe.model.enumuration.Team;
 import lombok.Data;
 
 import java.time.Period;
@@ -8,6 +9,8 @@ import java.time.Period;
 public class WorkerDto {
     private String workerName;
     private Integer workerId;
-    private Integer password;
-
+    private String password;
+    private String teams;
+    private Team team;
+    private String type;
 }

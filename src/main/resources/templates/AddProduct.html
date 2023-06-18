@@ -7,30 +7,40 @@
 </head>
 <body>
 <div class="container">
-    <nav class = "navbar navbar-expand-sm navbar-dark bg-secondary">
-        <a class = "navbar-brand" href = "homepage-static.html">Asteel Flash</a>
-        <button class = "navbar-toggler" type = "button" data-toggle = "collapse"
-                data-target = "#navbarSupportedContent"
-                aria-controls = "navbarSupportedContent" aria-expanded = "false"
-                aria-label = "Toggle navigation">
-            <span class = "navbar-toggler-icon"></span>
+    <nav class="navbar navbar-expand-sm navbar-dark bg-secondary">
+        <a class="navbar-brand" href="">Asteel Flash</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class = "collapse navbar-collapse" id = "navbarSupportedContent">
-            <ul class = "navbar-nav mr-auto">
-                <li class = "nav-item">
-                    <a class = "nav-link" href = "/Gestion_Quatités">Gestion quatités</a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/}">Gestion quatités</a>
                 </li>
-                <li class = "nav-item ">
-                    <a class = "nav-link" href = "/Gestion_d_Arréts">Gestion d'arréts</a>
+                <li class="nav-item ">
+                    <a class="nav-link" href="/Gestion_d_Arréts">Gestion d'arréts</a>
                 </li>
-                <li class = "nav-item ">
-                    <a class = "nav-link" href = "/Gestion_produits">Gestion produits</a>
+                <li class="nav-item ">
+                    <a class="nav-link" href="/Gestion_produits">Gestion produits</a>
                 </li>
-                <li class = "nav-item active">
-                    <a class = "nav-link" href = "/Ajouter_Produit">Ajouter Produit</a>
+                <li class="nav-item">
+                    <a class="nav-link" href="/Ajouter_Operateur">Ajouter Operateur</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/Ajouter_Produit">Ajouter Produit</a>
                 </li>
             </ul>
+            <a class="navbar-brand" th:href="@{Deconnexion}">Déconnexion</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
         </div>
     </nav>
     <div class="row">
@@ -41,28 +51,30 @@
             <hr/>
         </div>
 
-        <div class="container">
+        <form class="container" th:action="@{/postProduct}" th:object="${ProductDto}" method="post">
             <div class="form-group row col-6 ">
                 <label for="" class="col-sm-6 col-form-label mr-0"><h5>Ref.Produit</h5></label>
-                <div class="col-sm-6">
-                    <input class="form-control" placeholder="Entrer Produit" th:field="*{nomProduit}" type="text">
-                </div>
+                <div class="col-sm-6"><input class="form-control" placeholder="Entrer Produit"
+                                             th:field="*{nomProduit}" type="text"></div>
                 <div class="col-sm-4">
                     <span class="text-danger"> </span>
                 </div>
                 <hr/>
             </div>
             <div class="form-group row col-6">
-                <label for="" class="col-sm-6 col-form-label mr-0"><h5>Temp de cycle</h5></label>
-                <input class="form-control col-5"  type="time" th:field="*{cycleTempsTheorique}"
-                       placeholder="Max. 50 chars">
-                </input>
+                <label for="" class="col-sm-6 col-form-label mr-0"><h5>Temp de cycle top</h5></label>
+                <input class="form-control col-5" type="number" step="0.01" placeholder="cycleTempsTheoriqueTop" th:field="*{cycleTempsTheoriqueTop}">
+                <hr/>
+            </div>
+            <div class="form-group row col-6">
+                <label for="" class="col-sm-6 col-form-label mr-0"><h5>Temp de cycle Bottom</h5></label>
+                <input class="form-control col-5" type="number" step="0.01" placeholder="cycleTempsTheoriqueBottom" th:field="*{cycleTempsTheoriqueBottom}">
                 <hr/>
             </div>
             <div class="form-group row col-6 ">
                 <label for="" class="col-sm-6 col-form-label mr-0"><h5>Nb Cartes Par Flanc</h5></label>
                 <div class="col-sm-6">
-                    <input class="form-control" placeholder="Nb Cartes Par Flanc" th:field="*{}" type="number">
+                    <input class="form-control" placeholder="Nb Cartes Par Flanc" th:field="*{nb_carte}" type="number">
                 </div>
                 <div class="col-sm-4">
                     <span class="text-danger"> </span>
@@ -70,13 +82,32 @@
                 <hr/>
             </div>
             <div class="form-group row col-6 ">
-            <div class="form-group row">
-                <div class="col-sm-10">
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                <div class="form-group row">
+                    <div class="col-sm-10">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
                 </div>
             </div>
-        </div>
-        </div>
+        </form>
+        <table class=" container table">
+            <thead class="thead-light">
+            <tr>
+                <th class="text-left">ID</th>
+                <th class="text-left">Nom Produit</th>
+                <th class="text-left">Cycle Temps Théorique Top</th>
+                <th class="text-left">Cycle Temps Théorique Bottom</th>
+                <th class="text-left">Nombre De Catre Par Flanc</th>
 
+
+                <th class="text-left"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="productItem : ${productLIST}">
+                <td th:text="${productItem.Id}"></td>
+                <td th:text="${productItem.nomProduit}">7</td>
+                <td th:text="${productItem.cycleTempsTheoriqueTop}"></td>
+                <td th:text="${productItem.cycleTempsTheoriqueBottom}"></td>
+                <td th:text="${productItem.nb_carte}"></td>
     </div>
 </div>

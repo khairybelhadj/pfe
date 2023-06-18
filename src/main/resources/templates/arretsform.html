@@ -19,7 +19,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/Gestion_Quatités">Gestion quatités</a>
+                    <a class="nav-link" th:href="@{/}">Gestion quatités</a>
                 </li>
                 <li class="nav-item active">
                     <a class="nav-link" href="/Gestion_d_Arréts">Gestion d'arréts</a>
@@ -27,11 +27,21 @@
                 <li class="nav-item ">
                     <a class="nav-link" href="/Gestion_produits">Gestion produits</a>
                 </li>
-                <li class="nav-item ">
-                    <a class="nav-link" href="Configuration">Configuration</a>
+                <li class = "nav-item">
+                    <a class = "nav-link" href = "/Ajouter_Operateur">Ajouter Operateur</a>
+                </li>
+                <li class = "nav-item">
+                    <a class = "nav-link" href = "/Ajouter_Produit">Ajouter Produit</a>
                 </li>
             </ul>
         </div>
+        <a class="navbar-brand" th:href="@{Deconnexion}">Déconnexion</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
     </nav>
     <form th:action="@{/postStop}" th:object="${stopDto}" method="post">
 
@@ -52,13 +62,13 @@
                         <div class="col-sm-5">
                             <select th:field="*{categorieDarrets}" class="form-control" placeholder="Mandatory" id="list1">
                                 <option value="">Select an option</option>
-                                <option value="ARRETPROGRAMMES">ARRETPROGRAMMES 1</option>
-                                <option value="ChangementDeSerie">ChangementDeSerie 2</option>
-                                <option value="DisfonctionementOrganisationnel">Option 3</option>
-                                <option value="pannes">pannes 4</option>
-                                <option value="5">Option 5</option>
-                                <option value="6">Option 6</option>
-                                <option value="7">Option 7</option>
+                                <option value="ARRETPROGRAMMES">Arrêts Programmés</option>
+                                <option value="ChangementDeSerie">Changement de Série</option>
+                                <option value="DisfonctionementOrganisationnel">Disfonctionement Organisationel</option>
+                                <option value="pannesMachine">Pannes Machines</option>
+                                <option value="pannesPracess">Dérives Process Réglage Machines</option>
+                                <option value="NonQualite">Non Qualité</option>
+                                <option value="SousCharge">Sous Charge</option>
                             </select>
                         </div>
 
@@ -172,11 +182,11 @@
 const list2Options = {
   "ARRETPROGRAMMES": ["Pause", "Réunion", "Formation", "Maintenance préventive niveaux 1", "Validation EI", "Modification de la ligne", "Arrêt planifié par la production"],
   "ChangementDeSerie": ["Démarrage/Arrêt de la ligne", "changement de la série", "stabilisation de ma four"],
-  "DisfonctionementOrganisationnel": ["Arrêt dû à un manque de kit/outillage"," absence de personnel"," instructions de travail manquantes, problèmes avec l'outillage", "coupure de courant/réseau"," changement de planning de dernière minute", "rupture de composants"],
-  "pannes": ["Convoyeur/Dépileur", "Sérigraphie", "P1", "P2","P3","FOUR", "Inspection AOI", "Autres Dérives"],
-  "5": ["Convoyeur/Dépileur", "Sérigraphie", "P1", "P2","P3","FOUR", "Inspection AOI","Amélioration Process/Optimisation", "Autres Dérives"],
-  "6": ["Reprise piéces en défauts Qualité", "Arrêts Problème Qualité", "Réajustement équipement suite défauts"],
-  "7": ["Fermeture d'usine", "Pas de Busuness suffisant", "Maintenance Préventive", "Jour féries"]
+  "DisfonctionementOrganisationnel": ["Arrêt dû à un manque de kit/outillage","absence de personnel","instructions de travail manquantes", "problèmes avec l'outillage", "coupure de courant/Problème Compresseur","changement de planning de dernière minute", "rupture de composants"],
+  "pannesMachine": ["Convoyeur/Dépileur", "Sérigraphie", "P1", "P2","P3","Four", "Inspection AOI", "Autres Dérives"],
+  "pannesPracess": ["Convoyeur/Dépileur", "Sérigraphie", "P1", "P2","P3","Four", "Inspection AOI","Amélioration Process/Optimisation", "Autres Dérives"],
+  "NonQualite": ["Reprise piéces en défauts Qualité", "Arrêts Problème Qualité", "Réajustement équipement suite défauts"],
+  "SousCharge": ["Fermeture d'usine", "Pas de Busuness suffisant", "Maintenance Préventive", "Jour féries"]
 };
 
 // Get references to the select elements

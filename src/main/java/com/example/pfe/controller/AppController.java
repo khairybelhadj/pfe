@@ -4,13 +4,17 @@ import com.example.pfe.application.DataBaseConfigService;
 import com.example.pfe.controller.dto.ProductDto;
 import com.example.pfe.controller.dto.StopDto;
 import com.example.pfe.controller.dto.WorkPeriodDto;
+import com.example.pfe.controller.dto.WorkerDto;
 import com.example.pfe.persistence.entiy.StopEntity;
+import com.example.pfe.persistence.repo.WorkerRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.server.Session;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -23,20 +27,76 @@ public class AppController {
     DataBaseConfigService dataBaseConfigService;
 
 
-    /**
-     * @param workPeriodId
-     * @return
-     */
 
+//    @GetMapping("getStopsByWorkPeriodId")
+//    public List<StopEntity> getStopsByWorkPeriodId(@RequestParam Integer workPeriodId) {
+//        return dataBaseConfigService.getStopsByWorkPeriodId(workPeriodId);
+//    }
+    @GetMapping("test")
+    public ModelAndView getAll() {
+        List<WorkPeriodDto> WorkPeriodDtos = dataBaseConfigService.getTodayWorkPeriod();
+         WorkPeriodDtos.stream().forEach(workPeriodDto -> {
+             workPeriodDto.setStopDtos(dataBaseConfigService.getStopsByWorkPeriodId(workPeriodDto.getId()));
+        });
+        Map<String, Object> model = new HashMap<>();
+        model.put("workPeriodLIST",WorkPeriodDtos);
 
-    @GetMapping("getStopsByWorkPeriodId")
-    public List<StopEntity> getStopsByWorkPeriodId(@RequestParam Integer workPeriodId) {
-        return dataBaseConfigService.getStopsByWorkPeriodId(workPeriodId);
+        return new ModelAndView("prodform",model);
+    }
+
+    @GetMapping("login")
+    public ModelAndView login() {
+        Map<String, Object> model = new HashMap<>();
+
+        WorkerDto workerDto = new WorkerDto();
+
+        model.put("woker", workerDto);
+        // creat the modelAndView
+        ModelAndView modelAndView = new ModelAndView("login", model);
+        return modelAndView;
+    }
+
+    @PostMapping("postLogin")
+    public ModelAndView postlogin(WorkerDto workerDto, HttpSession session) {
+        Map<String, Object> model = new HashMap<>();
+        // Redirect to the index view
+        RedirectView redirectView = new RedirectView();
+        if (dataBaseConfigService.verifie(workerDto)) {
+            session.setAttribute("WorkerName", workerDto.getWorkerName());
+            session.setAttribute("WorkerTeams", workerDto.getTeam());
+            if (dataBaseConfigService.isAdmin(workerDto.getWorkerName())) {
+                session.setAttribute("WorkerType", "Admin");
+            } else {
+                session.setAttribute("WorkerType", "Worker");
+            }
+            redirectView.setUrl("/");
+
+        } else {
+            redirectView.setUrl("/login");
+
+        }
+        return new ModelAndView(redirectView);
+    }
+
+    @GetMapping("Deconnexion")
+    public ModelAndView Deconnexion(HttpSession session) {
+        RedirectView redirectView = new RedirectView();
+        session.setAttribute("WorkerName", null);
+        session.setAttribute("WorkerTeams", null);
+        redirectView.setUrl("/login");
+        return new ModelAndView(redirectView);
     }
 
     @GetMapping()
-    public ModelAndView getIndex() {
+    public ModelAndView getIndex(HttpSession session) {
 
+        String name = (String) session.getAttribute("WorkerName");
+        System.out.println(name);
+        if (name == null) {
+            RedirectView redirectView = new RedirectView();
+            redirectView.setUrl("login");
+            return new ModelAndView(redirectView);
+        }
         // create the model
         Map<String, Object> model = new HashMap<>();
 
@@ -53,23 +113,143 @@ public class AppController {
     }
 
     @GetMapping("/add/workPeriod")
-    public ModelAndView addWorkPeriodGet() {
+    public ModelAndView addWorkPeriodGet(HttpSession session) {
+
+        String name = (String) session.getAttribute("WorkerName");
+        System.out.println(name);
+        if (name == null) {
+            RedirectView redirectView = new RedirectView("/login");
+            return new ModelAndView(redirectView);
+        }
+
         Map<String, Object> model = new HashMap<>();
         WorkPeriodDto workPeriodDto = new WorkPeriodDto();
         workPeriodDto.setBottom(false);
         workPeriodDto.setTop(true);
+        List<String> productNameList = dataBaseConfigService.getProductNames();
+        model.put("productNameList", productNameList);
         model.put("workperiod", workPeriodDto);
         ModelAndView modelAndView = new ModelAndView("quantform", model);
         return modelAndView;
     }
 
-    @GetMapping("/add/product")
-    public ModelAndView addProductGet() {
+//    @GetMapping("/add/product")
+//    public ModelAndView addProductGet() {
+//        Map<String, Object> model = new HashMap<>();
+//        ProductDto productDto = new ProductDto();
+//        model.put("productDto", productDto);
+//        ModelAndView modelAndView = new ModelAndView("productForm", model);
+//        return modelAndView;
+//    }
+
+
+    @GetMapping("/Ajouter_Operateur")
+    public ModelAndView AddWorkerGet(HttpSession session) {
+        String name = (String) session.getAttribute("WorkerName");
+        String type = (String) session.getAttribute("WorkerType");
+        if (name == null) {
+            RedirectView redirectView = new RedirectView();
+            redirectView.setUrl("login");
+            return new ModelAndView(redirectView);
+        }
+        if (!type.equals("Admin")) {
+            RedirectView redirectView = new RedirectView();
+            redirectView.setUrl("/");
+            return new ModelAndView(redirectView);
+        }
+        Map<String, Object> model = new HashMap<>();
+        WorkerDto workerDto = new WorkerDto();
+        model.put("workerDto", workerDto);
+        List<WorkerDto> list1 = dataBaseConfigService.getAllWorker();
+        model.put("workerLIST", list1);
+        ModelAndView modelAndView = new ModelAndView("AddWorker", model);
+        return modelAndView;
+    }
+
+    @GetMapping("/Gestion_d_Arréts")
+    public ModelAndView addstopsGet(HttpSession session) {
+
+        String name = (String) session.getAttribute("WorkerName");
+        if (name == null) {
+            RedirectView redirectView = new RedirectView();
+            redirectView.setUrl("login");
+            return new ModelAndView(redirectView);
+        }
+        Map<String, Object> model = new HashMap<>();
+        StopDto stopDto = new StopDto();
+        model.put("stopDto", stopDto);
+        ModelAndView modelAndView = new ModelAndView("arretsform", model);
+        return modelAndView;
+    }
+
+    @GetMapping("/Gestion_Quatités")
+    public ModelAndView addQuantGet(HttpSession session) {
+        String name = (String) session.getAttribute("WorkerName");
+        if (name == null) {
+            RedirectView redirectView = new RedirectView();
+            redirectView.setUrl("login");
+            return new ModelAndView(redirectView);
+        }
         Map<String, Object> model = new HashMap<>();
         ProductDto productDto = new ProductDto();
         model.put("productDto", productDto);
-        ModelAndView modelAndView = new ModelAndView("productForm", model);
+        ModelAndView modelAndView = new ModelAndView("quantform", model);
         return modelAndView;
+    }
+
+    @PostMapping("postWorker")
+    public ModelAndView postWorker(WorkerDto workerdDto) {
+
+        // Print the new Work Period
+        System.out.println(workerdDto);
+
+        //save the new Work period
+        dataBaseConfigService.saveWorker(workerdDto);
+
+        // Redirect to the index view
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl("/Ajouter_Operateur");
+        return new ModelAndView(redirectView);
+    }
+
+    @GetMapping("/Ajouter_Produit")
+    public ModelAndView AddProductGet(HttpSession session) {
+
+
+        String name = (String) session.getAttribute("WorkerName");
+        String type = (String) session.getAttribute("WorkerType");
+        if (name == null) {
+            RedirectView redirectView = new RedirectView();
+            redirectView.setUrl("login");
+            return new ModelAndView(redirectView);
+        }
+        if (!type.equals("Admin")) {
+            RedirectView redirectView = new RedirectView();
+            redirectView.setUrl("/");
+            return new ModelAndView(redirectView);
+        }
+
+        Map<String, Object> model = new HashMap<>();
+        ProductDto productDto = new ProductDto();
+        model.put("ProductDto", productDto);
+        List<ProductDto> list1 = dataBaseConfigService.getAllProduct();
+        model.put("productLIST", list1);
+        ModelAndView modelAndView = new ModelAndView("AddProduct", model);
+        return modelAndView;
+    }
+
+    @PostMapping("postProduct")
+    public ModelAndView postProduct(ProductDto productDto) {
+
+        // Print the new Work Period
+        System.out.println(productDto);
+
+        //save the new Work period
+        dataBaseConfigService.saveProduct(productDto);
+        // Redirect to the add product view
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl("/Ajouter_Produit");
+        return new ModelAndView(redirectView);
     }
 
     @PostMapping("postWorkPeiod")
@@ -88,7 +268,14 @@ public class AppController {
     }
 
     @GetMapping("/add/stop")
-    public ModelAndView addStopGet(@RequestParam Integer workPeroiodId) {
+    public ModelAndView addStopGet(@RequestParam Integer workPeroiodId, HttpSession session) {
+        String name = (String) session.getAttribute("WorkerName");
+        if (name == null) {
+            RedirectView redirectView = new RedirectView();
+            redirectView.setUrl("login");
+            return new ModelAndView(redirectView);
+        }
+
         Map<String, Object> model = new HashMap<>();
         StopDto stopDto = new StopDto();
         stopDto.setWorkPeriodId(workPeroiodId);
@@ -166,12 +353,11 @@ public class AppController {
 //        return new ModelAndView("watchlist", model);
 //    }
 //
-//    @GetMapping("Gestion_d_arrés")
-//    public ModelAndView getGestion_d_arrés() {
-//        Map<String, String> model = new HashMap<>();
-//        model.put("arrets", "Gestion_d_arrés");
-//        return new ModelAndView("arretsform", model);
-//    }
+//      @GetMapping("Gestion_d_arrés")
+//       public ModelAndView getGestion_d_arrés() {
+//      Map<String, String> model = new HashMap<>();
+//  model.put("arrets", "Gestion_d_arrés");
+//return new ModelAndView("arretsform", model); //}
 //
 //    @GetMapping("Gestion_produits")
 //    public ModelAndView GetGestion_produits() {

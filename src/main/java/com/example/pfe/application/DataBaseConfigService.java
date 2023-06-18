@@ -8,6 +8,7 @@ import com.example.pfe.model.enumuration.Jour;
 import com.example.pfe.persistence.entiy.*;
 import com.example.pfe.persistence.repo.*;
 import com.sun.istack.NotNull;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,9 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.time.DayOfWeek.SUNDAY;
 
@@ -67,20 +70,29 @@ public class DataBaseConfigService {
      * @param workPeriodId
      * @return
      */
-    public @NotNull List<StopEntity> getStopsByWorkPeriodId(@NotNull Integer workPeriodId) {
-        List<StopEntity> stopEntities;
+    public @NotNull List<StopDto> getStopsByWorkPeriodId(@NotNull Integer workPeriodId) {
+        List<StopDto> StopDtos;
         Optional<WorkPeriodEntity> workPeriodEntityOp = workPeriodRepo.findById(workPeriodId);
 
         if (workPeriodEntityOp.isPresent()) {
-            stopEntities = workPeriodEntityOp.get().getStopEntities();
-        } else {
-            stopEntities = new ArrayList<>();
+            StopDtos = workPeriodEntityOp.get().getStopEntities().stream().map(stopEntity -> {
+                StopDto newStopDto = new StopDto();
+                BeanUtils.copyProperties(stopEntity, newStopDto);
+                newStopDto.setEnd_time(stopEntity.getEnd_time().toString());
+                newStopDto.setStarttime(stopEntity.getStarttime().toString());
+                newStopDto.setCategorieDarrets(stopEntity.getCategorieDarrets());
+                newStopDto.setTypesDarrets(stopEntity.getTypesDarrets().toString());
+                return newStopDto;
+            }).toList();
         }
-        return stopEntities;
+        else {
+            StopDtos = new ArrayList<>();
+        }
+        return StopDtos;
 
     }
 
-    public @NotNull List<WorkerDto> saveConfiguration(@NotNull WorkerDto workerDto) {
+    public void saveWorker(@NotNull WorkerDto workerDto) {
 
         // create the new Worker
         WorkerEntity newWorkerEntity = new WorkerEntity();
@@ -91,16 +103,62 @@ public class DataBaseConfigService {
         // save Worker
         workerRepo.save(newWorkerEntity);
 
+//        workerDtos.forEach(workerDtoVar -> System.out.println(workerDtoVar));
+
+    }
+
+    public void saveProduct(@NotNull ProductDto productDto) {
+
+        ProductEntity newProductEntity = new ProductEntity();
+
+        BeanUtils.copyProperties(productDto, newProductEntity);
+
+        productRepo.save(newProductEntity);
+
+        List<ProductDto> productDtos = productRepo.findAll().stream().map(productEntity -> {
+            ProductDto tmpProductDto = new ProductDto();
+            BeanUtils.copyProperties(productEntity, tmpProductDto);
+            return tmpProductDto;
+        }).toList();
+    }
+
+    public Boolean verifie(WorkerDto workerDto){
+       List<WorkerEntity> workerEntities=  workerRepo.findByworkerName(workerDto.getWorkerName());
+       Optional isPresent=  workerEntities.stream().map(WorkerEntity::getPassword).filter(password->password.equals(workerDto.getPassword())).findAny();
+       if(isPresent.isPresent()) return true;
+       else return false;
+    }
+
+    public Boolean isAdmin(String name){
+        List<WorkerEntity> workerEntities=  workerRepo.findByworkerName(name);
+        Optional isAdmin=  workerEntities.stream().map(WorkerEntity::getType).filter(obj -> obj.equals("Admin")).findAny();
+        return isAdmin.isPresent();
+    }
+
+    public List<WorkerDto> getAllWorker(){
         // Convert the Entity to dto
         List<WorkerDto> workerDtos = workerRepo.findAll().stream().map(workerEntity -> {
             WorkerDto tmpWorkerDto = new WorkerDto();
             BeanUtils.copyProperties(workerEntity, tmpWorkerDto);
+            tmpWorkerDto.setWorkerId(workerEntity.getId());
             return tmpWorkerDto;
         }).toList();
-
+        workerDtos.forEach(System.out::println);
         return workerDtos;
-    }
 
+    }
+    public List<ProductDto> getAllProduct(){
+        // Convert the Entity to dto
+        List<ProductDto> productDtos = productRepo.findAll().stream().map(productEntity -> {
+            ProductDto tmpProductDto = new ProductDto();
+            BeanUtils.copyProperties(productEntity, tmpProductDto);
+            tmpProductDto.setNomProduit(productEntity.getNomProduit());
+            return tmpProductDto;
+        }).toList();
+        productDtos.forEach(System.out::println);
+        return productDtos;
+
+    }
 
     /**
      * @param workPeriodDto
@@ -120,8 +178,8 @@ public class DataBaseConfigService {
 
 
         // Get the product associated with the new work Period
-        ProductEntity productEntityDB = productRepo.findById(workPeriodDto.getProductId()).get();
-        newWorkPeriodEntity.setProductEntity(productEntityDB);
+        ProductEntity productEntityDB = productRepo.findByNomProduit(workPeriodDto.getNomProduit());
+        newWorkPeriodEntity.setProductEntity(Optional.of(productEntityDB).get());
         newWorkPeriodEntity.setDate(LocalDate.now());
         newWorkPeriodEntity.setStartTime(LocalTime.parse((CharSequence) workPeriodDto.getStartTime(), DateTimeFormatter.ofPattern("HH:mm")));
 
@@ -150,9 +208,10 @@ public class DataBaseConfigService {
         return works.stream().map(workPeriodEntity -> {
             WorkPeriodDto workPeriodDto1 = new WorkPeriodDto();
             BeanUtils.copyProperties(workPeriodEntity, workPeriodDto1);
-            Integer stopCount=(workPeriodEntity.getStopEntities().size());
+            Integer stopCount = (workPeriodEntity.getStopEntities().size());
             workPeriodDto1.setStopCount(stopCount);
             workPeriodDto1.setProductId(workPeriodEntity.getProductEntity().getId());
+            workPeriodDto1.setNomProduit(workPeriodEntity.getProductEntity().getNomProduit());
             if (null != workPeriodEntity.getStartTime()) {
                 workPeriodDto1.setStartTime(workPeriodEntity.getStartTime().format(DateTimeFormatter.ofPattern("HH:mm")));
             }
@@ -160,20 +219,25 @@ public class DataBaseConfigService {
         }).toList();
     }
 
-    public @NotNull ProductDto saveProduct(@NotNull ProductDto productDto) {
-        // create the new product
-        ProductEntity newProductEntity = new ProductEntity();
-        BeanUtils.copyProperties(productDto, newProductEntity);
-
-        // save the product
-        ProductEntity productEntity = productRepo.save(newProductEntity);
-
-        // create the new product
-        ProductDto newProductDTO = new ProductDto();
-        BeanUtils.copyProperties(productEntity, newProductDTO);
-
-        return newProductDTO;
-
-
+    public List<String> getProductNames() {
+        List<String> productNameList = productRepo.findAll().stream().map(ProductEntity::getNomProduit).toList();
+    return productNameList;
     }
+
+//    public @NotNull ProductDto saveProduct(@NotNull ProductDto productDto) {
+//        // create the new product
+//        ProductEntity newProductEntity = new ProductEntity();
+//        BeanUtils.copyProperties(productDto, newProductEntity);
+//
+//        // save the product
+//        ProductEntity productEntity = productRepo.save(newProductEntity);
+//
+//        // create the new product
+//        ProductDto newProductDTO = new ProductDto();
+//        BeanUtils.copyProperties(productEntity, newProductDTO);
+//
+//        return newProductDTO;
+//
+//
+//    }
 }

@@ -2,10 +2,10 @@ package com.example.pfe.model.enumuration;
 
 public enum CategorieDarrets {
     ARRETPROGRAMMES,
-    ArretsProgrammes,
     ChangementDeSerie,
     DisfonctionementOrganisationnel,
-    pannes,
+    pannesMachine,
+    pannesPracess,
     NonQualite,
     SousCharge;
 

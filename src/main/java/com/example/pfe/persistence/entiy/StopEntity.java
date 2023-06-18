@@ -20,7 +20,7 @@ import java.time.format.DateTimeFormatter;
 @Setter
 public class StopEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Integer id;
     @Column(name = "types_arrets")
     private TypesDarrets typesDarrets;
@@ -36,6 +36,7 @@ public class StopEntity {
 
     public StopEntity(StopDto stopDto) {
         this.typesDarrets =  TypesDarrets.get(stopDto.getTypesDarrets()).get();
+        this.categorieDarrets=stopDto.getCategorieDarrets();
         this.cause_stop = stopDto.getCause_stop();
         this.description = stopDto.getDescription();
         this.starttime = LocalTime.parse((CharSequence) stopDto.getStarttime(), DateTimeFormatter.ofPattern("HH:mm"));

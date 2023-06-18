@@ -12,10 +12,16 @@ import java.util.List;
 @Table(name = "product")
 public class ProductEntity {
     @Id
+    @GeneratedValue
     private Integer id;
     @Column(name = "nom_produit")
     private String nomProduit;
-
+    @Column(name = "nb_carte")
+    private Integer nb_carte;
+    @Column(name = "cycleTempsTheoriqueTop")
+    private  String cycleTempsTheoriqueTop;
+    @Column(name = "cycleTempsTheoriqueBottom")
+    private  String cycleTempsTheoriqueBottom;
     @OneToMany
     private List<WorkPeriodEntity> workPeriodEntities;
 
