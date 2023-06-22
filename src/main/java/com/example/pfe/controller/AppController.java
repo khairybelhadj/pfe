@@ -20,7 +20,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 
-@Controller
+@RestController
 public class AppController {
 
     @Autowired
@@ -32,14 +32,28 @@ public class AppController {
 //    public List<StopEntity> getStopsByWorkPeriodId(@RequestParam Integer workPeriodId) {
 //        return dataBaseConfigService.getStopsByWorkPeriodId(workPeriodId);
 //    }
-    @GetMapping("test")
+    @GetMapping("look")
     public ModelAndView getAll() {
-        List<WorkPeriodDto> WorkPeriodDtos = dataBaseConfigService.getTodayWorkPeriod();
+        String shift1= "Equipe 1";
+        String shift2= "Equipe 2";
+        String shift3= "Equipe 3";
+
+        List<WorkPeriodDto> WorkPeriodDtos = dataBaseConfigService.getTodayWorkPeriod(shift1);
          WorkPeriodDtos.stream().forEach(workPeriodDto -> {
              workPeriodDto.setStopDtos(dataBaseConfigService.getStopsByWorkPeriodId(workPeriodDto.getId()));
         });
+        List<WorkPeriodDto> WorkPeriodDtos1 = dataBaseConfigService.getTodayWorkPeriod(shift2);
+        WorkPeriodDtos.stream().forEach(workPeriodDto -> {
+            workPeriodDto.setStopDtos(dataBaseConfigService.getStopsByWorkPeriodId(workPeriodDto.getId()));
+        });
+        List<WorkPeriodDto> WorkPeriodDtos2 = dataBaseConfigService.getTodayWorkPeriod(shift3);
+        WorkPeriodDtos.stream().forEach(workPeriodDto -> {
+            workPeriodDto.setStopDtos(dataBaseConfigService.getStopsByWorkPeriodId(workPeriodDto.getId()));
+        });
         Map<String, Object> model = new HashMap<>();
         model.put("workPeriodLIST",WorkPeriodDtos);
+        model.put("workPeriodLIST1",WorkPeriodDtos1);
+        model.put("workPeriodLIST2",WorkPeriodDtos2);
 
         return new ModelAndView("prodform",model);
     }
@@ -91,6 +105,8 @@ public class AppController {
     public ModelAndView getIndex(HttpSession session) {
 
         String name = (String) session.getAttribute("WorkerName");
+        String team = (String) session.getAttribute("WorkerTeams");
+
         System.out.println(name);
         if (name == null) {
             RedirectView redirectView = new RedirectView();
@@ -101,7 +117,7 @@ public class AppController {
         Map<String, Object> model = new HashMap<>();
 
         // get the list od the today work period and put it into the model
-        List<WorkPeriodDto> list1 = dataBaseConfigService.getTodayWorkPeriod();
+        List<WorkPeriodDto> list1 = dataBaseConfigService.getTodayWorkPeriod(team);
         model.put("workPeriodLIST", list1);
 
         // put the today date in the model
@@ -133,6 +149,35 @@ public class AppController {
         return modelAndView;
     }
 
+    @GetMapping("/validate")
+    public ModelAndView updateWorkPeriodGet(@RequestParam("workPeroiodId") Integer workPeroiodId ,HttpSession session) {
+
+        String name = (String) session.getAttribute("WorkerName");
+        System.out.println(name);
+        if (name == null) {
+            RedirectView redirectView = new RedirectView("/login");
+            return new ModelAndView(redirectView);
+        }
+
+        Map<String, Object> model = new HashMap<>();
+        WorkPeriodDto workPeriodDto = dataBaseConfigService.getWorkPeriodById(workPeroiodId);
+        model.put("workperiod", workPeriodDto);
+        ModelAndView modelAndView = new ModelAndView("update", model);
+        return modelAndView;
+    }
+
+    @PostMapping("validate")
+    public ModelAndView postvalidate(WorkPeriodDto workPeriodDto) {
+
+
+        //save the new Work period
+        dataBaseConfigService.validate_workPeriod(workPeriodDto);
+
+        // Redirect to the index view
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl("/");
+        return new ModelAndView(redirectView);
+    }
 //    @GetMapping("/add/product")
 //    public ModelAndView addProductGet() {
 //        Map<String, Object> model = new HashMap<>();
@@ -267,6 +312,9 @@ public class AppController {
         return new ModelAndView(redirectView);
     }
 
+
+
+
     @GetMapping("/add/stop")
     public ModelAndView addStopGet(@RequestParam Integer workPeroiodId, HttpSession session) {
         String name = (String) session.getAttribute("WorkerName");
@@ -284,6 +332,10 @@ public class AppController {
         return modelAndView;
     }
 
+    /**
+     * @param stopDto
+     * @return
+     */
     @PostMapping("postStop")
     public ModelAndView get(StopDto stopDto) {
         System.out.println(stopDto);
@@ -292,6 +344,11 @@ public class AppController {
         redirectView.setUrl("/");
         return new ModelAndView(redirectView);
 
+    }
+
+    @GetMapping("graph")
+    public  String getGraph(@RequestParam("shift") String shift){
+        return dataBaseConfigService.calculateOoe(LocalDate.now(),shift).toString();
     }
 
 

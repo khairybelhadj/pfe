@@ -17,4 +17,5 @@ public interface WorkPeriodRepo extends JpaRepository<WorkPeriodEntity,Integer> 
     List<WorkPeriodEntity> findByDate(LocalDate localDate);
 
 
+
 }

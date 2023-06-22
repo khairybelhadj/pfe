@@ -4,6 +4,7 @@ import com.example.pfe.controller.dto.ProductDto;
 import com.example.pfe.controller.dto.StopDto;
 import com.example.pfe.controller.dto.WorkPeriodDto;
 import com.example.pfe.controller.dto.WorkerDto;
+import com.example.pfe.model.enumuration.CategorieDarrets;
 import com.example.pfe.model.enumuration.Jour;
 import com.example.pfe.persistence.entiy.*;
 import com.example.pfe.persistence.repo.*;
@@ -16,13 +17,11 @@ import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
 import java.time.DayOfWeek;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.time.DayOfWeek.SUNDAY;
@@ -84,8 +83,7 @@ public class DataBaseConfigService {
                 newStopDto.setTypesDarrets(stopEntity.getTypesDarrets().toString());
                 return newStopDto;
             }).toList();
-        }
-        else {
+        } else {
             StopDtos = new ArrayList<>();
         }
         return StopDtos;
@@ -122,20 +120,20 @@ public class DataBaseConfigService {
         }).toList();
     }
 
-    public Boolean verifie(WorkerDto workerDto){
-       List<WorkerEntity> workerEntities=  workerRepo.findByworkerName(workerDto.getWorkerName());
-       Optional isPresent=  workerEntities.stream().map(WorkerEntity::getPassword).filter(password->password.equals(workerDto.getPassword())).findAny();
-       if(isPresent.isPresent()) return true;
-       else return false;
+    public Boolean verifie(WorkerDto workerDto) {
+        List<WorkerEntity> workerEntities = workerRepo.findByworkerName(workerDto.getWorkerName());
+        Optional isPresent = workerEntities.stream().map(WorkerEntity::getPassword).filter(password -> password.equals(workerDto.getPassword())).findAny();
+        if (isPresent.isPresent()) return true;
+        else return false;
     }
 
-    public Boolean isAdmin(String name){
-        List<WorkerEntity> workerEntities=  workerRepo.findByworkerName(name);
-        Optional isAdmin=  workerEntities.stream().map(WorkerEntity::getType).filter(obj -> obj.equals("Admin")).findAny();
+    public Boolean isAdmin(String name) {
+        List<WorkerEntity> workerEntities = workerRepo.findByworkerName(name);
+        Optional isAdmin = workerEntities.stream().map(WorkerEntity::getType).filter(obj -> obj.equals("Admin")).findAny();
         return isAdmin.isPresent();
     }
 
-    public List<WorkerDto> getAllWorker(){
+    public List<WorkerDto> getAllWorker() {
         // Convert the Entity to dto
         List<WorkerDto> workerDtos = workerRepo.findAll().stream().map(workerEntity -> {
             WorkerDto tmpWorkerDto = new WorkerDto();
@@ -147,7 +145,8 @@ public class DataBaseConfigService {
         return workerDtos;
 
     }
-    public List<ProductDto> getAllProduct(){
+
+    public List<ProductDto> getAllProduct() {
         // Convert the Entity to dto
         List<ProductDto> productDtos = productRepo.findAll().stream().map(productEntity -> {
             ProductDto tmpProductDto = new ProductDto();
@@ -195,14 +194,28 @@ public class DataBaseConfigService {
             return workPeriodDto1;
         }).toList();
     }
+    @Transactional
+    public void validate_workPeriod(WorkPeriodDto workPeriodDto){
+        WorkPeriodEntity workPeriodEntity = workPeriodRepo.getById(workPeriodDto.getId());
+        Integer id = workPeriodEntity.getId();
+        BeanUtils.copyProperties(workPeriodDto,workPeriodEntity);
+        workPeriodEntity.setEndTime(LocalTime.parse(workPeriodDto.getEndTime()));
+        workPeriodEntity.setStartTime(LocalTime.parse(workPeriodDto.getStartTime()));
+        workPeriodEntity.setId(id);
+        DayOfWeek today = LocalDate.now().getDayOfWeek();
+        int dayNumber = today.getValue();
+        Jour jour = Jour.of(dayNumber);
+        workPeriodEntity.setJour(jour);
+    }
 
     /**
      * @return
      */
-    public List<WorkPeriodDto> getTodayWorkPeriod() {
+    public List<WorkPeriodDto> getTodayWorkPeriod(String team) {
 
         // get the list of entity from database
-        List<WorkPeriodEntity> works = workPeriodRepo.findByDate(LocalDate.now());
+        List<WorkPeriodEntity> works = workPeriodRepo.findByDate(LocalDate.now()).stream().filter(workPeriodEntity -> workPeriodEntity.getShift().equals(team)).toList();
+
 
         // Convert entity to dto
         return works.stream().map(workPeriodEntity -> {
@@ -221,7 +234,7 @@ public class DataBaseConfigService {
 
     public List<String> getProductNames() {
         List<String> productNameList = productRepo.findAll().stream().map(ProductEntity::getNomProduit).toList();
-    return productNameList;
+        return productNameList;
     }
 
 //    public @NotNull ProductDto saveProduct(@NotNull ProductDto productDto) {
@@ -240,4 +253,48 @@ public class DataBaseConfigService {
 //
 //
 //    }
+
+    public Long calculateOoe(LocalDate date, String shift) {
+
+        List<WorkPeriodEntity> workperiodList = workPeriodRepo.findByDate(date).stream().
+                filter(workPeriodEntity -> workPeriodEntity.getShift().equals(shift)).
+                toList();
+        workperiodList.stream().filter(workPeriodEntity -> workPeriodEntity.getShift().equals(shift));
+
+        Duration temp8 = workperiodList.stream().map(workPeriodEntity -> {
+            return Duration.between(workPeriodEntity.getEndTime(), workPeriodEntity.getStartTime());
+        }).reduce(Duration.ZERO, Duration::plus);
+
+        List<StopDto> stopDtos = workperiodList.stream().map(workPeriodEntity -> getStopsByWorkPeriodId(workPeriodEntity.getId())).flatMap(List::stream).toList();
+
+        Duration arretProgTime = stopDtos.stream().
+                filter(stopDto -> stopDto.getCategorieDarrets().equals(CategorieDarrets.ARRETPROGRAMMES))
+                .map(stopDto -> {
+            return Duration.between(LocalTime.parse(stopDto.getEnd_time(),DateTimeFormatter.ofPattern("HH:mm")), LocalTime.parse(stopDto.getEnd_time(),DateTimeFormatter.ofPattern("HH:mm")));
+        }).reduce(Duration.ZERO, Duration::plus);
+
+        Duration arrettotal = stopDtos.stream().map(stopDto -> {
+            return Duration.between(LocalTime.parse(stopDto.getEnd_time(),DateTimeFormatter.ofPattern("HH:mm")), LocalTime.parse(stopDto.getEnd_time(),DateTimeFormatter.ofPattern("HH:mm")));
+        }).reduce(Duration.ZERO, Duration::plus);
+
+        Long trs = (temp8.toSeconds() - arretProgTime.toSeconds()) / (temp8.toSeconds() - arrettotal.toSeconds()) * 100;
+        return trs;
+    }
+
+    public WorkPeriodDto getWorkPeriodById(Integer workPeroiodId) {
+       return workPeriodRepo.findById(workPeroiodId).map(workPeriodEntity -> {
+            WorkPeriodDto workPeriodDto1 = new WorkPeriodDto();
+            BeanUtils.copyProperties(workPeriodEntity, workPeriodDto1);
+            Integer stopCount = (workPeriodEntity.getStopEntities().size());
+            workPeriodDto1.setStopCount(stopCount);
+            workPeriodDto1.setProductId(workPeriodEntity.getProductEntity().getId());
+            workPeriodDto1.setNomProduit(workPeriodEntity.getProductEntity().getNomProduit());
+            if(null != workPeriodEntity.getEndTime()){
+                workPeriodDto1.setEndTime(workPeriodEntity.getEndTime().format(DateTimeFormatter.ofPattern("HH:mm")));
+            }
+            if (null != workPeriodEntity.getStartTime()) {
+                workPeriodDto1.setStartTime(workPeriodEntity.getStartTime().format(DateTimeFormatter.ofPattern("HH:mm")));
+            }
+            return workPeriodDto1;}).get();
+    }
 }

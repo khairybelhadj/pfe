@@ -15,6 +15,8 @@ public class WorkPeriodDto {
     private Integer nombresCartes;
 
     private String startTime;
+    private String endTime;
+
     private Duration cycleTempsTheorique;
     private Duration tempsTheoriqueRealisation;
     private Boolean top;

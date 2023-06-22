@@ -11,6 +11,6 @@ public class WorkerDto {
     private Integer workerId;
     private String password;
     private String teams;
-    private Team team;
+    private String team;
     private String type;
 }

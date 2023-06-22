@@ -29,6 +29,9 @@ public class WorkPeriodEntity {
     private String shift;
     private LocalTime startTime;
 
+    private LocalTime endTime;
+
+
     private LocalDate date;
     @Enumerated(EnumType.STRING)
     private Jour jour;

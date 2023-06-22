@@ -8,7 +8,7 @@
 <body>
 <div class="container">
     <nav class="navbar navbar-expand-sm navbar-dark bg-secondary">
-        <a class="navbar-brand" href="homepage-static.html">Asteel Flash</a>
+        <a class="navbar-brand" th:href="@{/look}">Asteel Flash</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse"
                 data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -25,7 +25,7 @@
                     <a class="nav-link" href="/Gestion_d_Arréts">Gestion d'arréts</a>
                 </li>
                 <li class="nav-item ">
-                    <a class="nav-link" href="/Gestion_Produits">Gestion produits</a>
+                    <a class="nav-link" href="/look">Gestion </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/Ajouter_Operateur">Ajouter Operateur</a>
@@ -52,13 +52,6 @@
             </div>
 
         </div>
-        <div style="padding-top:20px;" class="col-4">
-            <a th:href="@{/add/workPeriod}">
-                <button type="button" class="btn btn-primary ">Ajouter une periode du travaille</button>
-            </a>
-
-        </div>
-        <hr/>
 
     </div>
 
@@ -66,33 +59,35 @@
 <div class="container">
     <div th:each="workPeriodItem : ${workPeriodLIST}">
     <div class="row">
-        <h3 class="text-left col-3 p-3 mb-2 bg-secondary text-white" >Jour</h3>
-        <h3 class="text-left col-3 p-3 mb-2 bg-secondary text-white">product</h3>
-        <h3 class="text-left col-3 p-3 mb-2 bg-secondary text-white">face</h3>
-        <h3 class="text-left col-3 p-3 mb-2 bg-secondary text-white">Start time</h3>
+        <h3 class="text-left col-md-3 p-3 mb-2 bg-secondary text-white">Jour</h3>
+        <h3 class="text-left col-md-3 p-3 mb-2 bg-secondary text-white">product</h3>
+        <h3 class="text-left col-md-2 p-3 mb-2 bg-secondary text-white">face</h3>
+        <h3 class="text-left col-md-2 p-3 mb-2 bg-secondary text-white">Start time</h3>
+        <h3 class="text-left col-md-2 p-3 mb-2 bg-secondary text-white">Equipe</h3>
     </div>
     <hr/>
         <div class="row">
-            <h5 class="col-3 text-success " th:text="${workPeriodItem.jour}"></h5>
-            <h5 class="col-3 text-success " th:text="${workPeriodItem.nomProduit}"></h5>
-            <h5 class="col-3 text-success " th:text="${workPeriodItem.face}"></h5>
-            <h5 class="col-3 text-success " th:text="${workPeriodItem.startTime}"></h5>
+            <h6 class="col-md-3 text-success " th:text="${workPeriodItem.jour}"></h6>
+            <h6 class="col-md-3 text-success " th:text="${workPeriodItem.nomProduit}"></h6>
+            <h6 class="col-md-2 text-success " th:text="${workPeriodItem.face}"></h6>
+            <h6 class="col-md-2 text-success " th:text="${workPeriodItem.startTime}"></h6>
+            <h6 class="col-md-2 text-success " th:text="${workPeriodItem.shift}"></h6>
             <hr/>
         </div>
         <hr/>
         <div class="row">
-            <h4 class="text-left col-3  bg-info text-white">les Arrêts :</h4>
-            <h4 class="text-left col-3 bg-info text-white">Catégories d'Arrêts</h4>
-            <h4 class="text-left col-3  bg-info text-white">Types d'Arrêts</h4>
-            <h4 class="text-left col-3  bg-info text-white">Heure de Début</h4>
+            <h4 class="text-left col-md-4  bg-info text-white">Catégories d'Arrêts</h4>
+            <h4 class="text-left col-md-4  bg-info text-white">Types d'Arrêts</h4>
+            <h4 class="text-left col-md-2  bg-info text-white">T_Debut</h4>
+            <h4 class="text-left col-md-2  bg-info text-white">T_fin</h4>
         </div>
-        <hr/>
+
 
         <div class="row" th:each="stopItem : ${workPeriodItem.stopDtos}">
-            <h4 class="col-3"></h4>
-            <h5 class="col-3" th:text="${stopItem.categorieDarrets}"></h5>
-            <h5 class="col-3" th:text="${stopItem.typesDarrets}"></h5>
-            <h5 class="col-3" th:text="${stopItem.starttime}"></h5>
+            <h6 class="col-md-4" th:text="${stopItem.categorieDarrets}"></h6>
+            <h6 class="col-md-4" th:text="${stopItem.typesDarrets}"></h6>
+            <h6 class="col-md-2" th:text="${stopItem.starttime}"></h6>
+            <h6 class="col-md-2" th:text="${stopItem.end_time}"></h6>
         </div>
         <hr/>
         <hr/>
