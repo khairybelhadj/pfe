@@ -10,6 +10,7 @@ import com.example.pfe.persistence.repo.WorkerRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.server.Session;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
@@ -20,27 +21,26 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 
-@RestController
+@Controller
 public class AppController {
 
     @Autowired
     DataBaseConfigService dataBaseConfigService;
 
 
-
-//    @GetMapping("getStopsByWorkPeriodId")
+    //    @GetMapping("getStopsByWorkPeriodId")
 //    public List<StopEntity> getStopsByWorkPeriodId(@RequestParam Integer workPeriodId) {
 //        return dataBaseConfigService.getStopsByWorkPeriodId(workPeriodId);
 //    }
     @GetMapping("look")
     public ModelAndView getAll() {
-        String shift1= "Equipe 1";
-        String shift2= "Equipe 2";
-        String shift3= "Equipe 3";
+        String shift1 = "Equipe 1";
+        String shift2 = "Equipe 2";
+        String shift3 = "Equipe 3";
 
         List<WorkPeriodDto> WorkPeriodDtos = dataBaseConfigService.getTodayWorkPeriod(shift1);
-         WorkPeriodDtos.stream().forEach(workPeriodDto -> {
-             workPeriodDto.setStopDtos(dataBaseConfigService.getStopsByWorkPeriodId(workPeriodDto.getId()));
+        WorkPeriodDtos.stream().forEach(workPeriodDto -> {
+            workPeriodDto.setStopDtos(dataBaseConfigService.getStopsByWorkPeriodId(workPeriodDto.getId()));
         });
         List<WorkPeriodDto> WorkPeriodDtos1 = dataBaseConfigService.getTodayWorkPeriod(shift2);
         WorkPeriodDtos.stream().forEach(workPeriodDto -> {
@@ -51,11 +51,11 @@ public class AppController {
             workPeriodDto.setStopDtos(dataBaseConfigService.getStopsByWorkPeriodId(workPeriodDto.getId()));
         });
         Map<String, Object> model = new HashMap<>();
-        model.put("workPeriodLIST",WorkPeriodDtos);
-        model.put("workPeriodLIST1",WorkPeriodDtos1);
-        model.put("workPeriodLIST2",WorkPeriodDtos2);
+        model.put("workPeriodLIST", WorkPeriodDtos);
+        model.put("workPeriodLIST1", WorkPeriodDtos1);
+        model.put("workPeriodLIST2", WorkPeriodDtos2);
 
-        return new ModelAndView("prodform",model);
+        return new ModelAndView("prodform", model);
     }
 
     @GetMapping("login")
@@ -150,7 +150,7 @@ public class AppController {
     }
 
     @GetMapping("/validate")
-    public ModelAndView updateWorkPeriodGet(@RequestParam("workPeroiodId") Integer workPeroiodId ,HttpSession session) {
+    public ModelAndView updateWorkPeriodGet(@RequestParam("workPeroiodId") Integer workPeroiodId, HttpSession session) {
 
         String name = (String) session.getAttribute("WorkerName");
         System.out.println(name);
@@ -313,8 +313,6 @@ public class AppController {
     }
 
 
-
-
     @GetMapping("/add/stop")
     public ModelAndView addStopGet(@RequestParam Integer workPeroiodId, HttpSession session) {
         String name = (String) session.getAttribute("WorkerName");
@@ -346,91 +344,40 @@ public class AppController {
 
     }
 
-    @GetMapping("graph")
-    public  String getGraph(@RequestParam("shift") String shift){
-        return dataBaseConfigService.calculateOoe(LocalDate.now(),shift).toString();
+    @GetMapping("print")
+    public ModelAndView getGraph(@RequestParam("shift") String shift) {
+
+        // Calcule
+        var time = dataBaseConfigService.calculate(LocalDate.now(),shift );
+
+      // affichage
+        Map<String,Object> model= new HashMap<>();
+        /// ooe
+        Map<String, Long> graphDataTeams1 = new TreeMap<>();
+        graphDataTeams1.put("WorkTime", time.get("ooe"));
+        graphDataTeams1.put("RestTile", 100- time.get("ooe"));
+        model.put("chartDataOOE", graphDataTeams1);
+
+
+        /// TRG
+        Map<String, Long> graphDataTeams2 = new TreeMap<>();
+        graphDataTeams2.put("WorkTime", time.get("trg"));
+        graphDataTeams2.put("RestTile", 100- time.get("trg"));
+        model.put("chartDataTRG", graphDataTeams2);
+
+
+
+        /// TRE
+        Map<String, Long> graphDataTeams3 = new TreeMap<>();
+        graphDataTeams3.put("WorkTime", time.get("tre"));
+        graphDataTeams3.put("RestTile", 100- time.get("tre"));
+        model.put("chartDataTRE", graphDataTeams3);
+        model.put("team",shift);
+        return new ModelAndView("print",model);
     }
-
-
-//    @GetMapping("getById/{id}")
-//    public StopEntity getStopById(@PathVariable Integer id) {
-//        Optional<StopEntity> stopOpt = stopRepo.findById(id);
-//        if (stopOpt.isPresent()) {
-//            StopEntity stopDB = stopOpt.get();
-//            stopDB.setStarttime(LocalTime.now());
-//            return stopDB;
-//        } else {
-//            return new StopEntity();
-//        }
-//    }
-
-//    @GetMapping("all")
-//    List<StopEntity> getAll() {
-//        return stopRepo.findByStarttime(LocalTime.now());
-//    }
-//
-//    @PostMapping("save")
-//    public StopEntity savaStop(@RequestBody StopEntity stop) {
-//        System.out.println(stop);
-//        stopRepo.save(stop);
-//        return stop;
-//    }
-//
-//    @PutMapping("update")
-//    public List<Stop> updateStop(@RequestBody Stop newstop) {
-//        for (int i = 0; i < stops.size(); i++) {
-//            if (stops.get(i).getId() == newstop.getId()) {
-//                stops.set(i, newstop);
-//            }
-//        }
-//        return stops;
-//    }
-//
-//    @GetMapping("getSalah")
-//    public ModelAndView raja3Salh() {
-//        Map model = new HashMap<>();
-//        model.put("name", "salah");
-//        ModelAndView modelView = new ModelAndView("sss", model);
-//        return modelView;
-//    }
-//
-//    @GetMapping("/watchlist")
-//    public ModelAndView getWatchlist() {
-//        String viewName = "watchlist";
-//        Map<String, Object> model = new HashMap<String, Object>();
-//        model.put("numberOfMovies", "1234");
-//        return new ModelAndView(viewName, model);
-//    }
-//
-//
-//    @GetMapping("salah")
-//    public ModelAndView getSlah(@RequestParam("nameurl") String nameProgram) {
-//        Map<String, String> model = new HashMap<>();
-//        model.put("namehtml", nameProgram.toLowerCase());
-//        return new ModelAndView("watchlist", model);
-//    }
-//
-//      @GetMapping("Gestion_d_arrés")
-//       public ModelAndView getGestion_d_arrés() {
-//      Map<String, String> model = new HashMap<>();
-//  model.put("arrets", "Gestion_d_arrés");
-//return new ModelAndView("arretsform", model); //}
-//
-//    @GetMapping("Gestion_produits")
-//    public ModelAndView GetGestion_produits() {
-//        Map<String, String> model = new HashMap<>();
-//        model.put("namehtml", "Gestion produits");
-//        return new ModelAndView("prodform", model);
-//    }
-//
-//    @GetMapping("Gestion_quatités")
-//    public ModelAndView GetQuantity() {
-//
-//        Map<String, String> model = new HashMap<>();
-//        model.put("namehtml", "Gestion quatités");
-//        return new ModelAndView("quantform", model);
-//    }
-
-
 }
+
+
+
+
 

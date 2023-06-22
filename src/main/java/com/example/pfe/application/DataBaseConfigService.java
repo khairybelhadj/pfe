@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -194,11 +195,12 @@ public class DataBaseConfigService {
             return workPeriodDto1;
         }).toList();
     }
+
     @Transactional
-    public void validate_workPeriod(WorkPeriodDto workPeriodDto){
+    public void validate_workPeriod(WorkPeriodDto workPeriodDto) {
         WorkPeriodEntity workPeriodEntity = workPeriodRepo.getById(workPeriodDto.getId());
         Integer id = workPeriodEntity.getId();
-        BeanUtils.copyProperties(workPeriodDto,workPeriodEntity);
+        BeanUtils.copyProperties(workPeriodDto, workPeriodEntity);
         workPeriodEntity.setEndTime(LocalTime.parse(workPeriodDto.getEndTime()));
         workPeriodEntity.setStartTime(LocalTime.parse(workPeriodDto.getStartTime()));
         workPeriodEntity.setId(id);
@@ -254,47 +256,74 @@ public class DataBaseConfigService {
 //
 //    }
 
-    public Long calculateOoe(LocalDate date, String shift) {
+    public Map<String, Long> calculate(LocalDate date, String shift) {
 
         List<WorkPeriodEntity> workperiodList = workPeriodRepo.findByDate(date).stream().
                 filter(workPeriodEntity -> workPeriodEntity.getShift().equals(shift)).
                 toList();
-        workperiodList.stream().filter(workPeriodEntity -> workPeriodEntity.getShift().equals(shift));
+        Map<String, Long> result = new HashMap<>();
 
-        Duration temp8 = workperiodList.stream().map(workPeriodEntity -> {
-            return Duration.between(workPeriodEntity.getEndTime(), workPeriodEntity.getStartTime());
-        }).reduce(Duration.ZERO, Duration::plus);
+        if (workperiodList.isEmpty()){
+            result.put("ooe",0L);
+            result.put("tre",0L);
+            result.put("trg",0L);
 
-        List<StopDto> stopDtos = workperiodList.stream().map(workPeriodEntity -> getStopsByWorkPeriodId(workPeriodEntity.getId())).flatMap(List::stream).toList();
+        }
 
-        Duration arretProgTime = stopDtos.stream().
+        List<WorkPeriodEntity> workperiodListFt = workperiodList.stream().filter(workPeriodEntity -> workPeriodEntity.getShift().equals(shift)).toList();
+
+        // Calculate the min of the local time
+        LocalTime localTimeMin = workperiodListFt.stream().map(WorkPeriodEntity::getStartTime).filter(Objects::nonNull).sorted().findFirst().get();
+
+        // fing the 8 hours work periode
+        long temp8 = Duration.between(localTimeMin, LocalTime.now()).toMinutes();
+        if (temp8 > 480) {
+            temp8 = 480;
+        }
+//        long temp8 = workperiodList.stream().map(workPeriodEntity -> {
+//            return Duration.between(workPeriodEntity.getEndTime(), workPeriodEntity.getStartTime());})
+//                    .map(Duration::abs).reduce(Duration.ZERO, Duration::plus).toMinutes();
+
+        List<StopEntity> stopDtos = workperiodListFt.stream().map(WorkPeriodEntity::getStopEntities).flatMap(List::stream).toList();
+
+        long arretProgTime = stopDtos.stream().
                 filter(stopDto -> stopDto.getCategorieDarrets().equals(CategorieDarrets.ARRETPROGRAMMES))
                 .map(stopDto -> {
-            return Duration.between(LocalTime.parse(stopDto.getEnd_time(),DateTimeFormatter.ofPattern("HH:mm")), LocalTime.parse(stopDto.getEnd_time(),DateTimeFormatter.ofPattern("HH:mm")));
-        }).reduce(Duration.ZERO, Duration::plus);
+                    return Duration.between(stopDto.getEnd_time(), stopDto.getStarttime());
+                }).map(Duration::abs).reduce(Duration.ZERO, Duration::plus).toMinutes();
 
-        Duration arrettotal = stopDtos.stream().map(stopDto -> {
-            return Duration.between(LocalTime.parse(stopDto.getEnd_time(),DateTimeFormatter.ofPattern("HH:mm")), LocalTime.parse(stopDto.getEnd_time(),DateTimeFormatter.ofPattern("HH:mm")));
-        }).reduce(Duration.ZERO, Duration::plus);
+        long arrettotal = stopDtos.stream().map(stopDto -> {
+            return Duration.between(stopDto.getEnd_time(), stopDto.getStarttime());
+        }).map(Duration::abs).reduce(Duration.ZERO, Duration::plus).toMinutes();
 
-        Long trs = (temp8.toSeconds() - arretProgTime.toSeconds()) / (temp8.toSeconds() - arrettotal.toSeconds()) * 100;
-        return trs;
+
+        double var2 = (double) (temp8 - arretProgTime);
+        double var1 = (double) (temp8 - arrettotal);
+
+        var trs = (((double) var1 / (double) var2) * 100);
+        result.put("ooe", Math.abs(Math.round(trs)));
+        var trg = (var1 / (double) temp8)*100;
+        result.put("trg", Math.abs(Math.round(trg)));
+        var tre= (trg*(8D/24D));
+        result.put("tre", Math.abs(Math.round(tre)));
+        return result;
     }
 
     public WorkPeriodDto getWorkPeriodById(Integer workPeroiodId) {
-       return workPeriodRepo.findById(workPeroiodId).map(workPeriodEntity -> {
+        return workPeriodRepo.findById(workPeroiodId).map(workPeriodEntity -> {
             WorkPeriodDto workPeriodDto1 = new WorkPeriodDto();
             BeanUtils.copyProperties(workPeriodEntity, workPeriodDto1);
             Integer stopCount = (workPeriodEntity.getStopEntities().size());
             workPeriodDto1.setStopCount(stopCount);
             workPeriodDto1.setProductId(workPeriodEntity.getProductEntity().getId());
             workPeriodDto1.setNomProduit(workPeriodEntity.getProductEntity().getNomProduit());
-            if(null != workPeriodEntity.getEndTime()){
+            if (null != workPeriodEntity.getEndTime()) {
                 workPeriodDto1.setEndTime(workPeriodEntity.getEndTime().format(DateTimeFormatter.ofPattern("HH:mm")));
             }
             if (null != workPeriodEntity.getStartTime()) {
                 workPeriodDto1.setStartTime(workPeriodEntity.getStartTime().format(DateTimeFormatter.ofPattern("HH:mm")));
             }
-            return workPeriodDto1;}).get();
+            return workPeriodDto1;
+        }).get();
     }
 }
